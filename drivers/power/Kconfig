@@ -702,6 +702,14 @@ config QUICK_CHARGE
 	 (mA) and finally from 91% to 100% on the Standard Current (mA) i.e.,
 	 1A. This Driver is Based on the Idea of Qualcomm's Quick Charge Technology
 	 and is Developed by Shoaib Anwar a.k.a. Shoaib0597.
+config QNS_SYSTEM
+	bool "Qnovo QNS wrapper implementation"
+	default n
+	help
+	  Say Y here to enable support for QNS system.
+	  QNS is a battery charging controller and it necessary to access a
+	  kernel driver for a battery charging.
+	  This adds sysfs interface which enables QNS daemon to access it.
 
 source "drivers/power/reset/Kconfig"
 
