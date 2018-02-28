@@ -69,6 +69,8 @@
 
 phys_addr_t __fdt_pointer __initdata;
 
+extern void pstore_ram_reserve_memory(void);
+
 unsigned int boot_reason;
 EXPORT_SYMBOL(boot_reason);
 
@@ -320,6 +322,10 @@ void __init setup_arch(char **cmdline_p)
 	 * thread.
 	 */
 	init_task.thread_info.ttbr0 = __pa_symbol(empty_zero_page);
+#endif
+
+#ifdef CONFIG_PSTORE
+	pstore_ram_reserve_memory();
 #endif
 
 #ifdef CONFIG_VT
