@@ -20,6 +20,7 @@
 #include <linux/ctype.h>
 #include <linux/cpu.h>
 #include "soc/qcom/msm-core.h"
+#include "pwrstat.h"
 
 #define MAX_PSTATES 50
 #define NUM_OF_PENTRY 3 /* number of variables for ptable node */
