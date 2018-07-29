@@ -38,6 +38,7 @@
 #include <stdbool.h>
 #define CREATE_TRACE_POINTS
 #include <trace/events/trace_msm_core.h>
+#include "pwrstat.h"
 
 #define TEMP_BASE_POINT 35
 #define TEMP_MAX_POINT 95
