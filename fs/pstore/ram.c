@@ -179,16 +179,18 @@ static bool prz_ok(struct persistent_ram_zone *prz)
 static ssize_t ramoops_pstore_read(u64 *id, enum pstore_type_id *type,
 				   int *count, struct timespec *time,
 				   char **buf, bool *compressed,
+				   ssize_t *ecc_notice_size,
 				   struct pstore_info *psi)
 {
 	ssize_t size;
-	ssize_t ecc_notice_size;
 	struct ramoops_context *cxt = psi->data;
-	struct persistent_ram_zone *prz;
+	struct persistent_ram_zone *prz = NULL;
+	int header_length = 0;
 
 	prz = ramoops_get_next_prz(cxt->przs, &cxt->dump_read_cnt,
 				   cxt->max_dump_cnt, id, type,
 				   PSTORE_TYPE_DMESG, 1);
+
 	if (!prz_ok(prz))
 		prz = ramoops_get_next_prz(&cxt->cprz, &cxt->console_read_cnt,
 					   1, id, type, PSTORE_TYPE_CONSOLE, 0);
@@ -201,21 +203,22 @@ static ssize_t ramoops_pstore_read(u64 *id, enum pstore_type_id *type,
 	if (!prz_ok(prz))
 		return 0;
 
-	size = persistent_ram_old_size(prz);
+	size = persistent_ram_old_size(prz) - header_length;
 
 	/* ECC correction notice */
-	ecc_notice_size = persistent_ram_ecc_string(prz, NULL, 0);
+	*ecc_notice_size = persistent_ram_ecc_string(prz, NULL, 0);
 
-	*buf = kmalloc(size + ecc_notice_size + 1, GFP_KERNEL);
+	*buf = kmalloc(size + *ecc_notice_size + 1, GFP_KERNEL);
 	if (*buf == NULL)
 		return -ENOMEM;
 
-	memcpy(*buf, persistent_ram_old(prz), size);
+	memcpy(*buf, (char *)persistent_ram_old(prz) + header_length, size);
 	ramoops_read_kmsg_hdr(*buf, time, compressed);
-	persistent_ram_ecc_string(prz, *buf + size, ecc_notice_size + 1);
+	persistent_ram_ecc_string(prz, *buf + size, *ecc_notice_size + 1);
 
-	return size + ecc_notice_size;
+	return size;
 }
+
 
 static size_t ramoops_write_kmsg_hdr(struct persistent_ram_zone *prz,
 				     bool compressed)

@@ -516,6 +516,7 @@ void pstore_get_records(int quiet)
 	int			failed = 0, rc;
 	bool			compressed;
 	int			unzipped_len = -1;
+	ssize_t			ecc_notice_size = 0;
 
 	if (!psi)
 		return;
@@ -525,7 +526,7 @@ void pstore_get_records(int quiet)
 		goto out;
 
 	while ((size = psi->read(&id, &type, &count, &time, &buf, &compressed,
-				psi)) > 0) {
+				 &ecc_notice_size, psi)) > 0) {
 		if (compressed && (type == PSTORE_TYPE_DMESG)) {
 			if (big_oops_buf)
 				unzipped_len = pstore_decompress(buf,
@@ -533,6 +534,9 @@ void pstore_get_records(int quiet)
 							big_oops_buf_sz);
 
 			if (unzipped_len > 0) {
+				if (ecc_notice_size)
+					memcpy(big_oops_buf + unzipped_len,
+					       buf + size, ecc_notice_size);
 				kfree(buf);
 				buf = big_oops_buf;
 				size = unzipped_len;
@@ -544,7 +548,8 @@ void pstore_get_records(int quiet)
 			}
 		}
 		rc = pstore_mkfile(type, psi->name, id, count, buf,
-				  compressed, (size_t)size, time, psi);
+				   compressed, size + ecc_notice_size,
+				   time, psi);
 		if (unzipped_len < 0) {
 			/* Free buffer other than big oops */
 			kfree(buf);
