@@ -199,6 +199,10 @@
 #define BATTERY_FCC 3000
 #endif
 
+#ifdef CONFIG_QUICK_CHARGE
+#include <linux/Quick_Charge.h>
+#endif
+
 int pre_usb_current_ma = -EINVAL;
 bool thermal = false;
 bool recovery = false;
@@ -1241,7 +1245,7 @@ static int get_prop_current_now(struct smb358_charger *chip)
 		} else {
 			pr_debug("No BMS supply registered return 0\n");
 		}
-	return 1000;
+	return 1500;
 }
 
 static int smb358_get_prop_charge_type(struct smb358_charger *chip)
@@ -2476,34 +2480,34 @@ static void smb358_external_power_changed(struct power_supply *psy)
 		dev_err(chip->dev,
 			"Couldn't read USB current_max property, rc=%d\n", rc);
 	else
-        #ifdef CONFIG_C3N_SMB358
+        #ifdef CONFIG_QUICK_CHARGE
         {
            if (!((prop.intval / 1000) == 0))
            {
-	      if (rolex_smb358 == 1)
+	      if (QC_Toggle == 1) 
 	      {
 		 // If Current (mA) is Equal to 500 mA, then USB is Connected.
-                 if ((prop.intval / 1000) == 500)
+                 if ((prop.intval / 1000) == 500) 
 		 {
 		    // Raise USB-Charging Current (mA) to 1000 mA (Maximum Supported).
-                    pr_info("Using USB Current (mA) %d", 1000);
+                    pr_info("Using Custom USB Current (mA) %d", 1000);
                     current_limit = 1000;
                  }
-                 else
+                 else 
 	         {
-                     pr_info("Using AC Charge Current (mA) %d", 1250);
-                     current_limit = 1250;
+                     pr_info("Using Quick Charge Current (mA) %d", Dynamic_Current);
+                     current_limit = Dynamic_Current;
                  }
               }
               else
-		  // If AC Charge is Disabled, Restore Default Value of Current (mA).
+		  // If Quick Charge is Disabled, Restore Default Value of Current (mA). 
                   current_limit = prop.intval / 1000;
            }
 	   else
 	       current_limit = 0;
 	}
 	#else
-	    // If AC Charge is Not Compiled, Leave Current (mA) Value Untouched.
+	    // If Quick Charge is Not Compiled, Leave Current (mA) Value Untouched.
 	    current_limit = prop.intval / 1000;
 	#endif
 
@@ -2804,10 +2808,25 @@ static int smb_parse_dt(struct smb358_charger *chip)
 	else
 		chip->chg_valid_act_low = gpio_flags & OF_GPIO_ACTIVE_LOW;
 
+        #ifdef CONFIG_QUICK_CHARGE
+	// If Quick Charge is Enabled, then Set the Max. Current to the Value of Dynamic Current of the Driver.
+	if (QC_Toggle == 1)
+	   chip->fastchg_current_max_ma = Dynamic_Current;
+	else
+	{
+	// If Quick Charge is Disabled, then Restore the Max. Current Value to the Default as Specified in DTB.
 	rc = of_property_read_u32(node, "qcom,fastchg-current-max-ma",
 						&chip->fastchg_current_max_ma);
 	if (rc)
 		chip->fastchg_current_max_ma = SMB358_FAST_CHG_MAX_MA;
+	}
+        #else
+	// If Quick Charge is not Compiled, then Read the Default Value only
+	rc = of_property_read_u32(node, "qcom,fastchg-current-max-ma",
+						&chip->fastchg_current_max_ma);
+	if (rc)
+		chip->fastchg_current_max_ma = SMB358_FAST_CHG_MAX_MA;
+        #endif
 
 	chip->iterm_disabled = of_property_read_bool(node,
 					"qcom,iterm-disabled");
