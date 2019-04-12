@@ -488,7 +488,7 @@ config BATTERY_BQ28400
 config QPNP_CHARGER
 	tristate "QPNP Charger driver"
 	depends on SPMI || MSM_SPMI
- 	depends on OF_SPMI
+	depends on OF_SPMI
 	depends on THERMAL_QPNP_ADC_TM
 	help
 	  Say Y here to enable the switch mode battery charger
@@ -686,6 +686,22 @@ config DISABLE_TEMP_PROTECT
 	help
 	  Say Y here to enable a function which disabled TEMP protect...
 	  WARNNING:Only SCM could open it.
+
+config QUICK_CHARGE
+       bool "Enable Quick Charge v1.0, developed by Shoaib0597."
+       depends on SMB358_CHARGER
+       default y
+       help
+         This Fast-Charge Driver improves upon the ThunderCharge Current Control
+	 Driver. In ThunderCharge, a Constant Current (mA) is Forced at all times
+	 irrespective of the Battery State. This has Two Drawbacks. Firstly, the 
+	 Battery may get Damaged and secondly, users aren't able to Use Higher
+	 Current (mA) due to the Fear of Damage to Hardware. Now, this Quick Charge
+	 Driver fixes these issues. In this Driver, the Battery is Charged from 0%
+	 to 60% on Max. Current (mA), then from 61% to 90% on a Medium Current
+	 (mA) and finally from 91% to 100% on the Standard Current (mA) i.e.,
+	 1A. This Driver is Based on the Idea of Qualcomm's Quick Charge Technology
+	 and is Developed by Shoaib Anwar a.k.a. Shoaib0597.
 
 source "drivers/power/reset/Kconfig"
 
