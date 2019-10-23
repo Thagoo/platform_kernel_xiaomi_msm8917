@@ -143,7 +143,7 @@ unsigned int __read_mostly walt_disabled = 0;
 
 __read_mostly unsigned int sysctl_sched_cpu_high_irqload = (10 * NSEC_PER_MSEC);
 
-unsigned int sysctl_sched_walt_rotate_big_tasks;
+__read_mostly unsigned int sysctl_sched_walt_rotate_big_tasks = 0;
 unsigned int walt_rotation_enabled;
 
 /*
@@ -3325,13 +3325,7 @@ void walt_rotation_checkpoint(int nr_big)
 {
 	if (!hmp_capable())
 		return;
-
-	if (!sysctl_sched_walt_rotate_big_tasks || sched_boost() != NO_BOOST) {
-		walt_rotation_enabled = 0;
-		return;
-	}
-
-	walt_rotation_enabled = nr_big >= num_possible_cpus();
+	walt_rotation_enabled = 0;
 }
 
 int walt_proc_update_handler(struct ctl_table *table, int write,
