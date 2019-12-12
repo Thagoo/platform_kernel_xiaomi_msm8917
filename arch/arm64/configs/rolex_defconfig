@@ -2758,7 +2758,7 @@ CONFIG_MEDIA_TUNER_MC44S803=y
 #
 # CONFIG_DVB_DUMMY_FE is not set
 
-CONFIG_DRM=y
+# CONFIG_DRM is not set
 
 #
 # Frame buffer Devices
