@@ -1,0 +1,16 @@
+version: 2.1
+jobs:
+  compile:
+    docker:
+      - image: ubuntu:latest
+    steps:
+      - run: apt-get -y update && apt-get -y upgrade && apt-get -y install wget
+      - run: wget https://raw.githubusercontent.com/Thagoo/triton-script/ru/compiler.sh
+      - run: chmod +x compiler.sh
+      - run: bash compiler.sh
+
+workflows:
+  version: 2.1
+  cooking:
+    jobs:
+      - compile
