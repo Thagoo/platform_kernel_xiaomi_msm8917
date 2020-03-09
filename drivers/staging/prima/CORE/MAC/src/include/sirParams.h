@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2017 The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012-2017, 2019 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -265,6 +265,20 @@ typedef struct sSirMbMsgP2p
      */
     tANI_U32 data[1];
 } tSirMbMsgP2p, *tpSirMbMsgP2p;
+
+/**
+ * struct sir_mgmt_msg - Structure used to send auth frame from CSR to LIM
+ * @type: Message type
+ * @msg_len: Message length
+ * @session_id: session id
+ * @data: Pointer to data tobe transmitted
+ */
+struct sir_mgmt_msg {
+    uint16_t type;
+    uint16_t msg_len;
+    uint8_t session_id;
+    uint8_t *data;
+};
 
 /// Message queue definitions
 //  msgtype(2bytes) reserved(2bytes) bodyptr(4bytes) bodyval(4bytes)
@@ -765,7 +779,7 @@ typedef struct sSirMbMsgP2p
 #define SIR_HAL_SEND_LOG_DONE_IND            (SIR_HAL_ITC_MSG_TYPES_BEGIN + 272)
 #define SIR_HAL_LOST_LINK_PARAMS_IND         (SIR_HAL_ITC_MSG_TYPES_BEGIN + 273)
 #define SIR_HAL_SEND_FREQ_RANGE_CONTROL_IND  (SIR_HAL_ITC_MSG_TYPES_BEGIN + 274)
-#define SIR_HAL_FW_MEM_DUMP_REQ              (SIR_HAL_ITC_MSG_TYPES_BEGIN + 275)
+/* FW Memory Dump feature is deprecated */
 #define SIR_HAL_RSSI_MON_START_REQ           (SIR_HAL_ITC_MSG_TYPES_BEGIN + 276)
 #define SIR_HAL_RSSI_MON_STOP_REQ            (SIR_HAL_ITC_MSG_TYPES_BEGIN + 277)
 #define SIR_HAL_HIGH_PRIORITY_DATA_INFO_IND  (SIR_HAL_ITC_MSG_TYPES_BEGIN + 278)
@@ -913,6 +927,7 @@ typedef struct sSirMbMsgP2p
 #define SIR_LIM_REASSOC_MBB_RSP_TIMEOUT   (SIR_LIM_TIMEOUT_MSG_START + 0x2A)
 #endif
 
+#define SIR_LIM_AUTH_SAE_TIMEOUT            (SIR_LIM_TIMEOUT_MSG_START + 0x2B)
 #define SIR_LIM_CONVERT_ACTIVE_CHANNEL_TO_PASSIVE (SIR_LIM_TIMEOUT_MSG_START + 0x2C)
 #define SIR_LIM_AUTH_RETRY_TIMEOUT            (SIR_LIM_TIMEOUT_MSG_START + 0x2D)
 #define SIR_LIM_SAP_ECSA_TIMEOUT            (SIR_LIM_TIMEOUT_MSG_START + 0x2E)
