@@ -2077,6 +2077,12 @@ static void __cpuinit console_flush(struct work_struct *work)
 }
 
 static __cpuinitdata DECLARE_WORK(console_cpu_notify_work, console_flush);
+void emergency_unlock_console(void)
+{
+	console_suspended = 0;
+}
+EXPORT_SYMBOL(emergency_unlock_console);
+
 
 /**
  * console_cpu_notify - print deferred console messages after CPU hotplug
