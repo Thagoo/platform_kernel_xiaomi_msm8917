@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2017, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2015-2018, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -47,13 +47,13 @@
 			reg = <0x100>;
 			enable-method = "psci";
 			cpu-release-addr = <0x0 0x90000000>;
-			qcom,acc = <&acc0>;
-			qcom,limits-info = <&mitigation_profile0>;
+			efficiency = <1024>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 			next-level-cache = <&L2_1>;
+			#cooling-cells = <2>;
 			L2_1: l2-cache {
 			      compatible = "arm,arch-cache";
 			      cache-level = <2>;
-			      power-domain = <&l2ccc_0>;
 			      /* A53 L2 dump not supported */
 			      qcom,dump-size = <0x0>;
 			};
@@ -73,9 +73,10 @@
 			reg = <0x101>;
 			enable-method = "psci";
 			cpu-release-addr = <0x0 0x90000000>;
-			qcom,acc = <&acc1>;
-			qcom,limits-info = <&mitigation_profile1>;
+			efficiency = <1024>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 			next-level-cache = <&L2_1>;
+			#cooling-cells = <2>;
 			L1_I_101: l1-icache {
 				compatible = "arm,arch-cache";
 				qcom,dump-size = <0x8800>;
@@ -92,9 +93,10 @@
 			reg = <0x102>;
 			enable-method = "psci";
 			cpu-release-addr = <0x0 0x90000000>;
-			qcom,acc = <&acc2>;
-			qcom,limits-info = <&mitigation_profile2>;
+			efficiency = <1024>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 			next-level-cache = <&L2_1>;
+			#cooling-cells = <2>;
 			L1_I_102: l1-icache {
 				compatible = "arm,arch-cache";
 				qcom,dump-size = <0x8800>;
@@ -111,9 +113,10 @@
 			reg = <0x103>;
 			enable-method = "psci";
 			cpu-release-addr = <0x0 0x90000000>;
-			qcom,acc = <&acc3>;
-			qcom,limits-info = <&mitigation_profile3>;
+			efficiency = <1024>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 			next-level-cache = <&L2_1>;
+			#cooling-cells = <2>;
 			L1_I_103: l1-icache {
 				compatible = "arm,arch-cache";
 				qcom,dump-size = <0x8800>;
@@ -125,34 +128,38 @@
 		};
 
 	};
+
+	energy_costs: energy-costs {
+		compatible = "sched-energy";
+
+		CPU_COST_0: core-cost0 {
+			busy-cost-data = <
+				 960000 159
+				1094000 207
+				1248000 256
+				1401000 327
+				1497600 343
+			>;
+			idle-cost-data = <
+				100 80 60 40
+			>;
+		};
+		CLUSTER_COST_0: cluster-cost0 {
+			busy-cost-data = <
+				 960000 53
+				1094000 61
+				1248000 71
+				1401000 85
+				1497600 88
+			>;
+			idle-cost-data = <
+				4 3 2 1
+			>;
+		};
+	};
 };
 
 &soc {
-	l2ccc_0: clock-controller@b011000 {
-		compatible = "qcom,8937-l2ccc";
-		reg = <0x0b011000 0x1000>;
-	};
-
-	acc0:clock-controller@b088000 {
-		compatible = "qcom,arm-cortex-acc";
-		reg = <0x0b088000 0x1000>;
-	};
-
-	acc1:clock-controller@b098000 {
-		compatible = "qcom,arm-cortex-acc";
-		reg = <0x0b098000 0x1000>;
-	};
-
-	acc2:clock-controller@b0a8000 {
-		compatible = "qcom,arm-cortex-acc";
-		reg = <0x0b0a8000 0x1000>;
-	};
-
-	acc3:clock-controller@b0b8000 {
-		compatible = "qcom,arm-cortex-acc";
-		reg = <0x0b0b8000 0x1000>;
-	};
-
 	cpuss_dump {
 		compatible = "qcom,cpuss-dump";
 		qcom,l2_dump1 {
