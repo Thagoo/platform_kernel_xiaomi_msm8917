@@ -47,6 +47,8 @@
 			reg = <0x100>;
 			enable-method = "psci";
 			cpu-release-addr = <0x0 0x90000000>;
+			efficiency = <1024>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 			qcom,acc = <&acc0>;
 			qcom,limits-info = <&mitigation_profile0>;
 			next-level-cache = <&L2_1>;
@@ -73,6 +75,8 @@
 			reg = <0x101>;
 			enable-method = "psci";
 			cpu-release-addr = <0x0 0x90000000>;
+			efficiency = <1024>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 			qcom,acc = <&acc1>;
 			qcom,limits-info = <&mitigation_profile1>;
 			next-level-cache = <&L2_1>;
@@ -92,6 +96,8 @@
 			reg = <0x102>;
 			enable-method = "psci";
 			cpu-release-addr = <0x0 0x90000000>;
+			efficiency = <1024>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 			qcom,acc = <&acc2>;
 			qcom,limits-info = <&mitigation_profile2>;
 			next-level-cache = <&L2_1>;
@@ -111,6 +117,8 @@
 			reg = <0x103>;
 			enable-method = "psci";
 			cpu-release-addr = <0x0 0x90000000>;
+			efficiency = <1024>;
+			sched-energy-costs = <&CPU_COST_0 &CLUSTER_COST_0>;
 			qcom,acc = <&acc3>;
 			qcom,limits-info = <&mitigation_profile3>;
 			next-level-cache = <&L2_1>;
@@ -123,7 +131,35 @@
 				qcom,dump-size = <0x9000>;
 			};
 		};
-
+	};
+		
+	energy_costs: energy-costs {
+		    compatible = "sched-energy";
+		    
+		    CPU_COST_0: core-cost0 {
+			busy-cost-data = <
+				 960000 159
+				1094000 207
+				1248000 256
+				1401000 327
+				1497600 343
+			>;
+			idle-cost-data = <
+				100 80 60 40
+			>;
+		};
+		CLUSTER_COST_0: cluster-cost0 {
+			busy-cost-data = <
+				 960000 53
+				1094000 61
+				1248000 71
+				1401000 85
+				1497600 88
+			>;
+			idle-cost-data = <
+				4 3 2 1
+			>;
+		};
 	};
 };
 
