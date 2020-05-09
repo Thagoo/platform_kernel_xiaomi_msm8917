@@ -2070,7 +2070,6 @@ int diag_copy_to_user_msg_mask(char __user *buf, size_t count,
 	for (i = 0; i < msg_mask_tbl_count; i++, mask++) {
 		if (!mask->ptr)
 			continue;
-	for (i = 0; i < driver->msg_mask_tbl_count; i++, mask++) {
 		ptr = mask_info->update_buf;
 		len = 0;
 		mutex_lock(&mask->lock);
