@@ -878,6 +878,12 @@ config SERIAL_NUM
 	help
 	Provide a interface for reading CPU serial number
 
+config SECBOOT_FUSE
+	bool "Enable Secure boot fuse Proc Interface"
+	help
+	   Provide a interface for reading CPU secure boot fuse setting. Interface located in
+	   /proc/secboot_fuse_reg
+
 config MSM_REMOTEQDSS
 	bool "Allow debug tools to enable events on other processors"
 	depends on QCOM_SCM && DEBUG_FS
