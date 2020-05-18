@@ -873,6 +873,11 @@ config QMP_DEBUGFS_CLIENT
 
 source "drivers/soc/qcom/memshare/Kconfig"
 
+config SERIAL_NUM
+	bool "Enable Serial Number Proc Interface"
+	help
+	Provide a interface for reading CPU serial number
+
 config MSM_REMOTEQDSS
 	bool "Allow debug tools to enable events on other processors"
 	depends on QCOM_SCM && DEBUG_FS
