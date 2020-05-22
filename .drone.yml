@@ -1,16 +1,19 @@
 kind: pipeline
 name: triton
 
+clone:
+        depth: 1
+
 steps:
-  - name: Compile
-    image: ubuntu:latest
+  - name: compile
+    image: thagoo/triton-scripts:latest
     environment:
-    TOKEN:
-      from_secret: TOKEN
-    CID:
-      from_secret: CID
+            TOKEN:
+                    from_secret: token
+            CID:
+                    from_secret: cid
     commands:
-      - apt-get update && apt-get install -y bison build-essential bc bison curl libssl-dev git zip wget 
-      - wget https://raw.githubusercontent.com/Thagoo/triton-script/tr/compiler.sh
+      - wget https://raw.githubusercontent.com/Thagoo/triton-scripts/ta/compiler.sh
       - chmod +x compiler.sh
       - bash compiler.sh
+      
