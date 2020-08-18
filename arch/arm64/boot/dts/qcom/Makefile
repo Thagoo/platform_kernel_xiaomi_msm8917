@@ -569,7 +569,8 @@ dtb-$(CONFIG_ARCH_MSM8937) += msm8937-pmi8950-mtp.dtb \
 	msm8937-interposer-sdm439-mtp.dtb \
 	msm8937-interposer-sdm439-qrd.dtb \
 	msm8937-interposer-sdm429-cdp.dtb \
-	msm8937-interposer-sdm429-mtp.dtb
+	msm8937-interposer-sdm429-mtp.dtb \
+	msm8937-pmi8940-mtp.dtb
 
 dtb-$(CONFIG_ARCH_MSM8940) += msm8940-pmi8937-mtp.dtb \
 	msm8940-pmi8950-mtp.dtb \
