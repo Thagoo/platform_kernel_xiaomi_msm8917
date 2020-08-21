@@ -59,7 +59,7 @@
 	};
 };
 
-&pmi8940_charger {
+&qpnp_smbcharger {
 	/delete-property/ qcom,autoadjust-vfloat;
 
 	qcom,float-voltage-mv = <4350>;
@@ -68,7 +68,7 @@
 	qcom,mpp1-vadc = <&pmi8940_vadc>;
 };
 
-&pmi8940_fg {
+&qpnp_fg {
 	qcom,resume-soc = <99>;
 	qcom,fg-iterm-ma = <240>;
 	qcom,fg-chg-iterm-ma = <150>;
@@ -122,6 +122,6 @@
 	/delete-property/ qcom,misc-trim-error-rc19p2-clk-reg-present;
 
 	qcom,wave-play-rate-us = <5263>;
-	qcom,actuator-type = "erm";
+	qcom,actuator-type = <1>;
 	qcom,vmax-mv = <3250>;
 };
