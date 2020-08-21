@@ -1,0 +1,127 @@
+/*
+ * Copyright (c) 2017, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+&spmi_bus {
+	qcom,pmi8940@2 {
+		qcom,leds@a100 {
+            qcom,led_mpp_2 {
+				label = "mpp";
+				linux,name = "green";  
+                qcom,max-current = <40>; 
+                qcom,id = <6>;
+                
+                qcom,current-setting = <5>; 
+                qcom,source-sel = <8>;
+                qcom,mode-ctrl = <0x60>;
+                
+                qcom,mode = "pwm";
+                pwms = <&pmi8940_pwm 0 0>;
+                qcom,pwm-us = <10000>; 
+                qcom,pwm-channel = <0>;
+                linux,default-trigger = "none";  
+				qcom,default-state = "off";  
+                pwm-names = "green"; 
+			};
+		};
+	};
+};
+
+&pmi8940_mpps {
+	mpp@a000 {
+		qcom,mode = <4>;
+		qcom,src-sel = <0>;
+		qcom,ain-route = <0>;
+		qcom,master-en = <1>;
+		status = "okay";
+	};
+};
+
+&pmi8940_vadc {
+	chan@10 {
+		label = "mpp1";
+		reg = <0x10>;
+		qcom,decimation = <0>;
+		qcom,pre-div-channel-scaling = <0>;
+		qcom,calibration-type = "absolute";
+		qcom,scale-function = <0>;
+		qcom,hw-settle-time = <4>;
+		qcom,fast-avg-setup = <2>;
+	};
+};
+
+&pmi8940_charger {
+	/delete-property/ qcom,autoadjust-vfloat;
+
+	qcom,float-voltage-mv = <4350>;
+	qcom,usbin-vadc = <&pmi8940_vadc>;
+	qcom,jeita-temp-hard-limit =<1>;
+	qcom,mpp1-vadc = <&pmi8940_vadc>;
+};
+
+&pmi8940_fg {
+	qcom,resume-soc = <99>;
+	qcom,fg-iterm-ma = <240>;
+	qcom,fg-chg-iterm-ma = <150>;
+	qcom,fg-cutoff-voltage-mv = <3400>;
+	qcom,irq-volt-empty-mv = <3000>;
+	qcom,fg-cc-cv-threshold-mv = <4330>;
+	qcom,hot-bat-decidegc = <600>;
+	qcom,cold-bat-decidegc = <0>;
+	qcom,warm-bat-decidegc = <600>;
+	qcom,cool-bat-decidegc = <0>;
+	qcom,hold-soc-while-full = <1>;
+};
+
+&pmi8940_pwm {
+	/delete-property/ status;
+
+	qcom,dtest-line = <1>;
+	qcom,dtest-output = <1>;
+};
+
+&wled {
+	/delete-property/ qcom,en-ext-pfet-sc-pro;
+};
+
+&pmi8940_flash0 {
+	qcom,current = <800>;
+};
+
+&pmi8940_flash1 {
+	qcom,max-current = <300>;
+	qcom,current = <80>;
+};
+
+&pmi8940_torch0 {
+	qcom,current = <108>;
+};
+
+&pmi8940_torch1 {
+	qcom,current = <200>;
+};
+
+&pmi8940_switch {
+	qcom,current = <800>;
+};
+
+&pmi_haptic {
+	/delete-property/ qcom,lra-auto-res-mode;
+	/delete-property/ qcom,lra-high-z;
+	/delete-property/ qcom,lra-res-cal-period;
+	/delete-property/ qcom,correct-lra-drive-freq;
+	/delete-property/ qcom,misc-trim-error-rc19p2-clk-reg-present;
+
+	qcom,wave-play-rate-us = <5263>;
+	qcom,actuator-type = "erm";
+	qcom,vmax-mv = <3250>;
+};

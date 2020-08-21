@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2017, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+qcom,ascent-3700mah { 
+	qcom,max-voltage-uv = <4350000>; 
+	qcom,v-cutoff-uv = <3400000>;                     //liulinsheng@wind-mobi.com  
+	qcom,nom-batt-capacity-mah = <4000>; 
+	qcom,batt-id-kohm = <100>; 
+	qcom,battery-beta = <3435>; 
+	qcom,thermal-coefficients=[C8 86 C1 50 D3 37];    /*lvwenkang@wind-mobi.com */ 
+	qcom,battery-type = "ascent_3700mah"; 
+	qcom,chg-rslow-comp-c1 = <2951136>; 
+	qcom,chg-rslow-comp-c2 = <3788851>; 
+	qcom,chg-rs-to-rslow = <761584>; 
+	qcom,chg-rslow-comp-thr = <0x9C>; 
+	qcom,checksum = <0xF11D>; 
+	qcom,gui-version = "PMI8950GUI - 2.0.0.16"; 
+	qcom,fg-profile-data = [ 
+		 D4 83 EE 77  
+		 0A 80 E4 74  
+		 3A 83 32 73  
+		 CB 7F 54 80  
+		 E4 81 01 A0  
+		 92 BF E2 D0  
+		 7A 10 0B 88  
+		 02 7E 8D 81  
+		 D8 77 33 83  
+		 78 79 D8 86  
+		 F7 82 22 82  
+		 63 9B D3 BF  
+		 BA D1 76 0E  
+		 9D 0E 44 5A  
+		 CE 6E EE FC  
+		 55 3F CF 3F  
+		 02 42 00 00  
+		 9A 4C 92 3A  
+		 07 41 00 00  
+		 00 00 00 00  
+		 00 00 00 00  
+		 3D 6B AD 69  
+		 5F 6A 97 89  
+		 F5 75 98 6B  
+		 22 63 88 80  
+		 64 6F F9 63  
+		 A4 64 51 A0  
+		 2F FB 62 51  
+		 64 A0 71 0C  
+		 28 00 FF 36  
+		 F0 11 30 03  
+		 00 00 00 0C  
+	]; 
+}; 

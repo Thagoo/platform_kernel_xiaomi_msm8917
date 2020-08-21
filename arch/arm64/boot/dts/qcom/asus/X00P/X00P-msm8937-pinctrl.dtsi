@@ -1,0 +1,195 @@
+/*
+ * Copyright (c) 2017, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+&tlmm {
+	ctp_eint_as_int {
+		eint_as_int: eint_as_int {
+			mux {
+				pins = "gpio65";
+				function = "gpio";
+			};
+			config {
+			pins = "gpio65";
+			drive-strength = <8>;
+			input-enable; 
+			bias-disable;
+			};
+		};
+	};
+	
+	ctp_eint_output_low {
+		eint_output_low: eint_output_low {
+			mux {
+				pins = "gpio65";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio65";
+				drive-strength = <8>;
+				bias-pull-down;
+				output-low;
+			};
+		};
+	};
+
+	ctp_eint_output_high {
+		eint_output_high: eint_output_high {
+			mux {
+				pins = "gpio65";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio65";
+				drive-strength = <8>;
+				bias-pull-up;
+				output-high;
+			};
+		};
+	};
+	
+	sensor_mag_output_high {
+		mag_output_high: mag_output_high {
+			mux {
+				pins = "gpio44";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio44";
+				drive-strength = <8>;
+				bias-pull-up;
+				output-high;
+			};
+		};
+	};
+
+	pmx-uartconsole {
+		usbtem_int_default: usbtem_int_default {
+			muex {
+				pins = "gpio124";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio124";
+				drive-strength = <8>;
+				bias-pull-up;
+			};
+		};
+
+		sim1_eint_default: sim1_eint_default {
+			muex {
+				pins = "gpio54";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio54";
+				drive-strength = <8>;
+				bias-disable;
+			};
+		};
+
+		sim2_eint_default: sim2_eint_default {
+			muex {
+				pins = "gpio58";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio58";
+				drive-strength = <8>;
+				bias-disable;
+			};
+		};
+		
+		rf_int_default: rf_int_default {
+			muex {
+				pins = "gpio110";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio110";
+				drive-strength = <2>;
+				bias-disable;
+				
+			};
+		};
+	};
+};
+
+&front_flash_led_enable {
+	mux {
+		/delete-property/ pins;
+	};
+
+	config {
+		/delete-property/ pins;
+	};
+};
+
+&front_flash_led_disable {
+	mux {
+		/delete-property/ pins;
+	};
+
+	config {
+		/delete-property/ pins;
+	};
+};
+
+&mdss_dsi_active {
+	mux {
+		pins = "gpio60", "gpio98";
+	};
+
+	config {
+		pins = "gpio60", "gpio98";
+	};
+};
+
+&mdss_dsi_suspend {
+	mux {
+		pins = "gpio60", "gpio98";
+	};
+
+	config {
+		pins = "gpio60", "gpio98";
+	};
+};
+
+&usbc_int_default {
+	mux {
+		pins = "gpio131";
+	};
+
+	config {
+		pins = "gpio131";
+	};
+};
+
+&wsa_reset_on {
+	mux {
+		/delete-property/ pins;
+	};
+
+	config {
+		/delete-property/ pins;
+	};
+};
+
+&wsa_reset_off {
+	mux {
+		/delete-property/ pins;
+	};
+
+	config {
+		/delete-property/ pins;
+	};
+};
