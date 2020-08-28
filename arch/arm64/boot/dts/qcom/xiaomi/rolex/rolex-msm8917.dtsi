@@ -94,6 +94,10 @@
 	};
 };
 
+&apps_iommu {
+	qcom,no-aarch64;
+};
+
 &firmware {
 	android {
            /delete-node/ vbmeta;
