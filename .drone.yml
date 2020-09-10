@@ -6,14 +6,14 @@ clone:
 
 steps:
   - name: compile
-    image: thagoo/triton-scripts:latest
+    image: thagoo/triton-scripts:gcc
     environment:
             TOKEN:
                     from_secret: token
             CID:
                     from_secret: cid
     commands:
-      - wget https://raw.githubusercontent.com/Thagoo/triton-scripts/ta/compiler.sh
+      - wget https://raw.githubusercontent.com/Thagoo/triton-scripts/gcc/compiler.sh
       - chmod +x compiler.sh
       - bash compiler.sh
       
