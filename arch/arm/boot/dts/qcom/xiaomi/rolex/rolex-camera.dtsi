@@ -1,0 +1,10 @@
+#include "rolex-camera-sensor-qrd.dtsi"
+
+&soc {
+	led_flash0: qcom,camera-flash {
+		cell-index = <0>;
+		compatible = "qcom,camera-flash";
+		qcom,flash-type = <1>;
+	};
+};
+

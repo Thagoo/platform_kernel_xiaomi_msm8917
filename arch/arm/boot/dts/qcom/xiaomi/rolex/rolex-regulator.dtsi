@@ -1,0 +1,21 @@
+&rpm_bus {
+        rpm-regulator-ldoa6 {
+	        pm8937_l6: regulator-l6 {
+			regulator-min-microvolt = <1800000>;
+                        regulator-always-on;
+		};
+        };
+};
+&spmi_bus {
+        qcom,pm8937@1 {
+	        /* PM8937 S5 + S6 = VDD_APC supply */
+		pm8937_s5: spm-regulator@2000 {                        qcom,mode = "pwm";
+		};
+	};
+};
+&soc {
+        apc_vreg_corner: regulator@b018000 {
+                qcom,cpr-voltage-floor =   <1150000 1150000 1250000>;
+	};
+};
+                        
