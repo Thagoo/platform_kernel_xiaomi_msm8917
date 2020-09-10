@@ -195,6 +195,24 @@ config ARCH_MSM8917
 	  This enables support for the MSM8917 chipset. If you do not
 	  wish to build a kernel that runs on this chipset, say 'N' here.
 
+config MACH_XIAOMI
+	bool "Enable support for Xiaomi"
+        select ARCH_MSM8917
+	help
+	  This enables support for Xiaomi.
+
+config MACH_XIAOMI_ROLEX
+	bool "Enable support for Xiaomi Rolex"
+        select ARCH_XIAOMI
+	help
+	  This enables support for Xiaomi Rolex.
+
+config MACH_XIAOMI_RIVA
+	bool "Enable support for Xiaomi Riva"
+        select ARCH_XIAOMI
+	help
+	  This enables support for Xiaomi Riva.
+
 config ARCH_QM215
 	bool "Enable Support for Qualcomm Technologies Inc. QM215"
 	depends on ARCH_QCOM
