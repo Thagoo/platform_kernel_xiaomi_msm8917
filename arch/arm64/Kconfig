@@ -300,6 +300,12 @@ config ARCH_MSM8917
 	  This enables support for the MSM8917 chipset. If you don't
 	  know what to do here, say N
 
+config MACH_XIAOMI_ROLEX
+	bool "Enable support for Xiaomi MSM8917"
+        depends on ARCH_MSM8917
+	help
+	  This enables support for Xiaomi Rolex
+
 config ARCH_MSM8920
 	bool "Enable Support for Qualcomm Technologies Inc MSM8920"
 	depends on ARCH_MSM
