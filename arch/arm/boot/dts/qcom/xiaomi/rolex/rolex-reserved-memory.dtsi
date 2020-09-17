@@ -61,7 +61,16 @@ reserved-memory {
 		cont_splash_mem: splash_region@83000000 {
 			reg = <0x0 0x90000000 0x0 0x1400000>;
 		};
-	};
 
+                ramoops@9ff00000 {
+			compatible = "ramoops";
+			reg = <0x0 0x9ff00000 0x0 0x00300000>;
+			record-size = <0x1000>;
+			console-size = <0x200000>;
+			ftrace-size = <0x1000>;
+			pmsg-size = <0x200000>;
+			ecc-size = <0>;
+		};
+	};
 	soc: soc { };
 };
