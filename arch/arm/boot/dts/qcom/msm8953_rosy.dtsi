@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2015-2016, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -26,23 +26,6 @@
 		bootargs = "sched_enable_hmp=1 sched_enable_power_aware=1";
 	};
 
-	firmware: firmware {
-		android {
-			compatible = "android,firmware";
-			fstab {
-				compatible = "android,fstab";
-				vendor {
-					compatible = "android,vendor";
-					dev = "/dev/block/platform/soc/7824900.sdhci/by-name/vendor";
-					type = "ext4";
-					mnt_flags = "ro,barrier=1,discard";
-					fsmgr_flags = "wait,verify";
-					status = "ok";
-				};
-			};
-		};
-	};
-
 	reserved-memory {
 		#address-cells = <2>;
 		#size-cells = <2>;
@@ -51,12 +34,12 @@
 		other_ext_mem: other_ext_region@0 {
 			compatible = "removed-dma-pool";
 			no-map;
-			reg = <0x0 0x85b00000 0x0 0xd00000>;
+			reg = <0x0 0x84A00000 0x0 0x1E00000>;
 		};
 
 		modem_mem: modem_region@0 {
 			compatible = "removed-dma-pool";
-			no-map;
+			no-map-fixup;
 			reg = <0x0 0x86c00000 0x0 0x6a00000>;
 		};
 
@@ -84,7 +67,7 @@
 			compatible = "shared-dma-pool";
 			reusable;
 			alignment = <0 0x400000>;
-			size = <0 0x0b400000>;
+			size = <0 0x09800000>;
 		};
 
 		qseecom_mem: qseecom_region@0 {
@@ -138,6 +121,8 @@
 		i2c3 = &i2c_3;
 		i2c5 = &i2c_5;
 		spi3 = &spi_3;
+		spi6 = &spi_6;
+		i2c8 = &i2c_8;
 	};
 
 	soc: soc { };
@@ -574,8 +559,8 @@
 	qcom,msm-core@a0000 {
 		compatible = "qcom,apss-core-ea";
 		reg = <0xa0000 0x1000>;
-		qcom,low-hyst-temp = <100>;
-		qcom,high-hyst-temp = <100>;
+		qcom,low-hyst-temp = <10>;
+		qcom,high-hyst-temp = <5>;
 
 		ea0: ea0 {
 			sensor = <&sensor_information9>;
@@ -656,42 +641,6 @@
 		status = "disabled";
 	};
 
-	blsp2_uart0: uart@7aef000 {
-		compatible = "qcom,msm-hsuart-v14";
-		reg = <0x7aef000 0x200>,
-			<0x7ac4000 0x1f000>;
-		reg-names = "core_mem", "bam_mem";
-
-		interrupt-names = "core_irq", "bam_irq", "wakeup_irq";
-		#address-cells = <0>;
-		interrupt-parent = <&blsp2_uart0>;
-		interrupts = <0 1 2>;
-		#interrupt-cells = <1>;
-		interrupt-map-mask = <0xffffffff>;
-		interrupt-map = <0 &intc 0 306 0
-				1 &intc 0 239 0
-				2 &tlmm 17 0>;
-
-		qcom,inject-rx-on-wakeup;
-		qcom,rx-char-to-inject = <0xFD>;
-		qcom,master-id = <84>;
-		clock-names = "core_clk", "iface_clk";
-		clocks = <&clock_gcc clk_gcc_blsp2_uart1_apps_clk>,
-			<&clock_gcc clk_gcc_blsp2_ahb_clk>;
-		pinctrl-names = "sleep", "default";
-		pinctrl-0 = <&blsp2_uart0_sleep>;
-		pinctrl-1 = <&blsp2_uart0_active>;
-		qcom,bam-tx-ep-pipe-index = <0>;
-		qcom,bam-rx-ep-pipe-index = <1>;
-		qcom,msm-bus,name = "blsp2_uart0";
-		qcom,msm-bus,num-cases = <2>;
-		qcom,msm-bus,num-paths = <1>;
-		qcom,msm-bus,vectors-KBps =
-				<84 512 0 0>,
-				<84 512 500 800>;
-		status = "disabled";
-	};
-
 	dma_blsp1: qcom,sps-dma@7884000 { /* BLSP1 */
 		#dma-cells = <4>;
 		compatible = "qcom,sps-dma";
@@ -731,6 +680,40 @@
 		qcom,bam-consumer-pipe-index = <8>;
 		qcom,bam-producer-pipe-index = <9>;
 		qcom,master-id = <86>;
+	};
+
+	spi_6: spi@7af6000 {
+		compatible = "qcom,spi-qup-v2";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg-names = "spi_physical", "spi_bam_physical";
+		reg = <0x7af6000 0x600>,
+			<0x7ac4000 0x1f000>;
+		interrupt-names = "spi_irq", "spi_bam_irq";
+		interrupts = <0 300 0>, <0 239 0>;
+		spi-max-frequency = <50000000>;
+		pinctrl-names = "spi_default", "spi_sleep";
+		pinctrl-0 = <&spi6_default &spi6_cs0_active>;
+		pinctrl-1 = <&spi6_sleep &spi6_cs0_sleep>;
+		clocks = <&clock_gcc clk_gcc_blsp2_ahb_clk>,
+				<&clock_gcc clk_gcc_blsp2_qup2_spi_apps_clk>;
+		clock-names = "iface_clk", "core_clk";
+		qcom,infinite-mode = <0>;
+		qcom,use-bam;
+		qcom,rt-priority;
+		qcom,use-pinctrl;
+		qcom,ver-reg-exists;
+		qcom,bam-consumer-pipe-index = <6>;
+		qcom,bam-producer-pipe-index = <7>;
+		qcom,master-id = <84>;
+		status = "ok";
+		spi_ir@1 {
+			compatible = "qcom,spi-msm-codec-slave";
+			reg = <1>;
+			spi-max-frequency = <50000000>;
+			spi-cpol;
+			status = "ok";
+		};
 	};
 
 	i2c_2: i2c@78b6000 { /* BLSP1 QUP2 */
@@ -831,6 +814,37 @@
 		dma-names = "tx", "rx";
 	};
 
+	i2c_8: i2c@7af8000 { /* BLSP2 QUP3 */
+		compatible = "qcom,i2c-msm-v2";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg-names = "qup_phys_addr";
+		reg = <0x7af8000 0x600>;
+		interrupt-names = "qup_irq";
+		interrupts = <0 302 0>;
+		qcom,clk-freq-out = <400000>;
+		qcom,clk-freq-in  = <19200000>;
+		clock-names = "iface_clk", "core_clk";
+		clocks = <&clock_gcc clk_gcc_blsp2_ahb_clk>,
+			<&clock_gcc clk_gcc_blsp2_qup4_i2c_apps_clk>;
+
+		pinctrl-names = "i2c_active", "i2c_sleep";
+		pinctrl-0 = <&i2c_8_active>;
+		pinctrl-1 = <&i2c_8_sleep>;
+		qcom,noise-rjct-scl = <0>;
+		qcom,noise-rjct-sda = <0>;
+		qcom,master-id = <84>;
+		dmas = <&dma_blsp2 10 64 0x20000020 0x20>,
+			<&dma_blsp2 11 32 0x20000020 0x20>;
+		dma-names = "tx", "rx";
+
+		aw87319@58{ /*AW87319 PA*/
+		compatible = "awinic,aw87319_pa";
+		reg = <0x58>;
+		qcom,ext_pa_spk_aw87319_rst = <&tlmm 96 0>;
+		};
+	};
+
 	slim_msm: slim@c140000{
 		cell-index = <1>;
 		compatible = "qcom,slim-ngd";
@@ -858,9 +872,8 @@
 
 	clock_gcc: qcom,gcc@1800000 {
 		compatible = "qcom,gcc-8953";
-		reg = <0x1800000 0x80000>,
-			<0x00a4124 0x08>;
-		reg-names = "cc_base", "efuse";
+		reg = <0x1800000 0x80000>;
+		reg-names = "cc_base";
 		vdd_dig-supply = <&pm8953_s2_level>;
 		#clock-cells = <1>;
 	};
@@ -1214,9 +1227,9 @@
 			reg = <0x10 8>;
 		};
 
-		dload_type@1c {
+		dload_type@18 {
 			compatible = "qcom,msm-imem-dload-type";
-			reg = <0x1c 4>;
+			reg = <0x18 4>;
 		};
 
 		restart_reason@65c {
@@ -1266,6 +1279,18 @@
 		compatible = "qcom,jtag-fuse-v2";
 		reg = <0xa601c 0x8>;
 		reg-names = "fuse-base";
+	};
+	sn_fuse: snfuse@0xa0128 {
+		compatible = "qcom,sn-fuse";
+		reg = <0xa0128 0x4>;
+		reg-names = "sn-base";
+	};
+
+
+	sec_boot_fuse: secbootfuse@0xa41d0 {
+		compatible = "qcom,sec-boot-fuse";
+		reg = <0xa41d0 0x4>;
+		reg-names = "sec-boot-base";
 	};
 
 	jtag_mm0: jtagmm@619c000 {
@@ -1662,9 +1687,9 @@
 		qcom,ce-opp-freq = <100000000>;
 	};
 
-	qcom_seecom: qseecom@85b00000 {
+	qcom_seecom: qseecom@84A00000 {
 		compatible = "qcom,qseecom";
-		reg = <0x85b00000 0x800000>;
+		reg = <0x84A00000 0x1900000>;
 		reg-names = "secapp-region";
 		qcom,hlos-num-ce-hw-instances = <1>;
 		qcom,hlos-ce-hw-instance = <0>;
@@ -1675,6 +1700,7 @@
 		qcom,msm-bus,num-cases = <4>;
 		qcom,msm-bus,num-paths = <1>;
 		qcom,support-bus-scaling;
+		qcom,appsbl-qseecom-support;
 		qcom,msm-bus,vectors-KBps =
 			<55 512 0 0>,
 			<55 512 0 0>,
@@ -1763,10 +1789,8 @@
 
 	sdhc_1: sdhci@7824900 {
 		compatible = "qcom,sdhci-msm";
-		reg = <0x7824900 0x500>, <0x7824000 0x800>, <0x7824e00 0x200>,
-				<0x0119d000 0x4>;
-		reg-names = "hc_mem", "core_mem", "cmdq_mem",
-				"tlmm_mem";
+		reg = <0x7824900 0x500>, <0x7824000 0x800>, <0x7824e00 0x200>;
+		reg-names = "hc_mem", "core_mem", "cmdq_mem";
 
 		interrupts = <0 123 0>, <0 138 0>;
 		interrupt-names = "hc_irq", "pwr_irq";
@@ -2077,13 +2101,13 @@
 		interrupt-names = "hs_phy_irq", "ss_phy_irq", "pwr_event_irq";
 
 		USB3_GDSC-supply = <&gdsc_usb30>;
+		vbus_dwc3-supply = <&smbcharger_charger_otg>;
 		qcom,usb-dbm = <&dbm_1p5>;
 		qcom,msm-bus,name = "usb3";
-		qcom,msm-bus,num-cases = <3>;
+		qcom,msm-bus,num-cases = <2>;
 		qcom,msm-bus,num-paths = <1>;
 		qcom,msm-bus,vectors-KBps =
 					<61 512 0 0>,
-					<61 512 240000 800000>,
 					<61 512 240000 800000>;
 
 		qcom,dwc-usb3-msm-tx-fifo-size = <21288>;
@@ -2180,10 +2204,12 @@
 	qusb_phy: qusb@79000 {
 		compatible = "qcom,qusb2phy";
 		reg = <0x079000 0x180>,
+			<0x070f8800 0x400>,
 			<0x01841030 0x4>,
 			<0x0193f044 0x4>,
 			<0x0193f020 0x4>;
 		reg-names = "qusb_phy_base",
+			"qscratch_base",
 			"ref_clk_addr",
 			"tcsr_phy_clk_scheme_sel",
 			"tcsr_phy_level_shift_keeper";
@@ -2195,9 +2221,9 @@
 		qcom,vdd-voltage-level = <0 925000 925000>;
 
 		qcom,qusb-phy-init-seq = <0xF8 0x80
-					0xB3 0x84
+					0x73 0x84
 					0x83 0x88
-					0xC0 0x8C
+					0xC7 0x8C
 					0x14 0x9C
 					0x30 0x08
 					0x79 0x0C
@@ -2313,7 +2339,7 @@
 					0x974 0x8d8 0x8dc 0x804 0x800
 					0x808>;
 		vdd-supply = <&pm8953_l3>;
-		core-supply = <&pm8953_l7>;
+		vdda18-supply = <&pm8953_l7>;
 		qcom,vdd-voltage-level = <0 925000 925000>;
 		qcom,vbus-valid-override;
 
@@ -2328,6 +2354,11 @@
 		clock-names = "aux_clk", "pipe_clk", "cfg_ahb_clk", "phy_reset",
 			      "phy_phy_reset", "ref_clk_src", "ref_clk";
 
+	};
+
+	usb_audio_qmi_dev {
+		compatible = "qcom,usb-audio-qmi-dev";
+		qcom,usb-audio-intr-num = <2>;
 	};
 
 	dbm_1p5: dbm@70f8000 {
@@ -2346,6 +2377,7 @@
 #include "msm-pm8953-rpm-regulator.dtsi"
 #include "msm-pm8953.dtsi"
 #include "msm8953-regulator.dtsi"
+#include "msm-pmi8940.dtsi"
 #include "msm-audio.dtsi"
 #include "msm8953-audio_rosy.dtsi"
 #include "msm-gdsc-8916.dtsi"
