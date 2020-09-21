@@ -32,7 +32,6 @@
 #include <linux/qpnp/qpnp-revid.h>
 #include <linux/debugfs.h>
 #include <linux/uaccess.h>
-#include <linux/wakelock.h>
 #include "leds.h"
 
 #define FLASH_LED_PERIPHERAL_SUBTYPE(base)			(base + 0x05)
@@ -253,8 +252,8 @@ struct qpnp_flash_led {
 	struct workqueue_struct		*ordered_workq;
 	struct qpnp_vadc_chip		*vadc_dev;
 	struct mutex			flash_led_lock;
-	struct wake_lock		flashlight_led_lock;
 	struct qpnp_flash_led_buffer	*log;
+	struct wakeup_source 	flashlight_led_lock;
 	struct dentry			*dbgfs_root;
 	int				num_leds;
 	u16				base;
@@ -1858,10 +1857,10 @@ static void qpnp_flash_led_brightness_set(struct led_classdev *led_cdev,
 		pr_info("wt_flash_flashlight  enter value=%d\n", value);
 		if (value > 0) {
 			wt_flash_flashlight(true);
-			wake_lock(&led->flashlight_led_lock);
-		} else{
+			__pm_stay_awake(&led->flashlight_led_lock);
+		} else {
 			wt_flash_flashlight(false);
-			wake_unlock(&led->flashlight_led_lock);
+			__pm_relax(&led->flashlight_led_lock);
 		}
 	}
 
@@ -2535,8 +2534,7 @@ static int qpnp_flash_led_probe(struct platform_device *pdev)
 	}
 
 	mutex_init(&led->flash_led_lock);
-	wake_lock_init(&led->flashlight_led_lock, WAKE_LOCK_SUSPEND,
-			"flashlight_led_lock_wt");
+	wakeup_source_init(&led->flashlight_led_lock, "flashlight_led_lock_wt");
 
 	led->ordered_workq = alloc_ordered_workqueue("flash_led_workqueue", 0);
 	if (!led->ordered_workq) {
@@ -2674,7 +2672,7 @@ error_led_register:
 		led_classdev_unregister(&led->flash_node[i].cdev);
 	}
 	mutex_destroy(&led->flash_led_lock);
-	wake_lock_destroy(&led->flashlight_led_lock);
+	wakeup_source_trash(&led->flashlight_led_lock);
 	destroy_workqueue(led->ordered_workq);
 
 	return rc;
@@ -2700,7 +2698,7 @@ static int qpnp_flash_led_remove(struct platform_device *pdev)
 	}
 	debugfs_remove_recursive(led->dbgfs_root);
 	mutex_destroy(&led->flash_led_lock);
-	wake_lock_destroy(&led->flashlight_led_lock);
+	wakeup_source_trash(&led->flashlight_led_lock);
 	destroy_workqueue(led->ordered_workq);
 
 	return 0;
