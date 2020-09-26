@@ -45,3 +45,22 @@
 		#include "battery/3340624_Wind_E300cos_4000mAh_averaged_MasterSlave_Feb20th2018_PMI8940.dtsi"
 	};
 };
+
+&firmware {
+	android {
+		/delete-node/ vbmeta;
+		
+		fstab {
+			compatible = "android,fstab";
+
+			vendor {
+				compatible = "android,vendor";
+				dev = "/dev/block/platform/soc/7824900.sdhci/by-name/vendor";
+				type = "ext4";
+				mnt_flags = "ro,barrier=1,discard";
+				fsmgr_flags = "wait";
+				status = "ok";
+			};
+		};
+	};
+};

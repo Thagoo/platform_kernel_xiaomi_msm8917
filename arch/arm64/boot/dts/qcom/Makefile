@@ -577,7 +577,7 @@ dtb-$(CONFIG_ARCH_MSM8940) += msm8940-pmi8937-mtp.dtb \
 	msm8940-pmi8940-mtp.dtb
 
 ifeq ($(CONFIG_MACH_ASUS),y)
-	dtb-$(CONFIG_MACH_ASUS_X00P) += msm8937-pmi8940-mtp-X00P.dtb
+	dtb-$(CONFIG_MACH_ASUS_X00P) += msm8937-pmi8940-mtp-X00P.dtb #msm8917-pmi8940-mtp-X00P.dtb
 endif
 
 ifeq ($(CONFIG_MACH_XIAOMI),y)
