@@ -5,6 +5,7 @@
  *  Copyright © 2007  Anton Vorontsov <cbou@mail.ru>
  *  Copyright © 2004  Szabolcs Gyurko
  *  Copyright © 2003  Ian Molton <spyro@f2s.com>
+ *  Copyright (C) 2018 XiaoMi, Inc.
  *
  *  Modified: 2004, Oct     Szabolcs Gyurko
  *
@@ -265,6 +266,7 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(temp_cold),
 	POWER_SUPPLY_ATTR(temp_hot),
 	POWER_SUPPLY_ATTR(system_temp_level),
+	POWER_SUPPLY_ATTR(charger_type),
 	POWER_SUPPLY_ATTR(resistance),
 	POWER_SUPPLY_ATTR(resistance_capacitive),
 	POWER_SUPPLY_ATTR(resistance_id),
@@ -291,6 +293,7 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(restricted_charging),
 	POWER_SUPPLY_ATTR(current_capability),
 	POWER_SUPPLY_ATTR(typec_mode),
+	POWER_SUPPLY_ATTR(charging_call_state),
 	POWER_SUPPLY_ATTR(typec_cc_orientation),
 	POWER_SUPPLY_ATTR(typec_power_role),
 	POWER_SUPPLY_ATTR(pd_allowed),

@@ -18,6 +18,17 @@ config QPNP_FG_GEN3
 	  the fuel gauge. The state of charge is reported through a BMS power
 	  supply property and also sends uevents when the capacity is updated.
 
+config SMB358_CHARGER
+	tristate "SMB358 Battery Charger"
+	depends on I2C
+	help
+	  Say Y to include support for SMB358 Battery Charger.
+	  SMB358 is a single path switching mode charger capable of charging
+	  the battery with 2Amps of current.
+	  The driver supports charger enable/disable.
+	  The driver reports the charger status via the power supply framework.
+	  A charger status change triggers an IRQ via the device STAT pin.
+
 config SMB135X_CHARGER
 	tristate "SMB135X Battery Charger"
 	depends on I2C
