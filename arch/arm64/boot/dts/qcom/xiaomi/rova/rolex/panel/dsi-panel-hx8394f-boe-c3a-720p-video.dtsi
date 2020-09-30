@@ -38,10 +38,14 @@
 		qcom,mdss-dsi-h-right-border = <0>;
 		qcom,mdss-dsi-v-top-border = <0>;
 		qcom,mdss-dsi-v-bottom-border = <0>;
+		qcom,mdss-dsi-panel-jitter = <0x8 0xa>;
 		qcom,mdss-dsi-bpp = <24>;
 		qcom,mdss-dsi-color-order = "rgb_swap_rgb";
 		qcom,mdss-dsi-underflow-color = <0x00>;
 		qcom,mdss-dsi-border-color = <0>;
+		qcom,ulps-enabled;
+		qcom,suspend-ulps-enabled;
+		qcom,panel-allow-phy-poweroff;
 		qcom,mdss-dsi-on-command = [39 01 00 00 00 00 04 B9 FF 83 94
 				05 01 00 00 78 00 02 11 00
 				05 01 00 00 14 00 02 29 00];
