@@ -1432,7 +1432,7 @@ config TOUCHSCREEN_GT9XX_ROLEX
 
           If unsure, say N.
 
-source "drivers/input/touchscreen/gt9xx_rolex/Kconfig"
+source "drivers/input/touchscreen/gt9xx_rova/Kconfig"
 
 config TOUCHSCREEN_HIMAX_CHIPSET
 	bool "Himax touchpanel CHIPSET"
