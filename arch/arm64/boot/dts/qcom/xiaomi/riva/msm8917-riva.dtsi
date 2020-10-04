@@ -16,6 +16,10 @@
 	aliases {
 		spi7 = &spi_7;
 	};
+
+  	chosen {
+		bootargs = "sched_enable_hmp=0";
+ 	};
 };
 
 &other_ext_mem {
@@ -92,3 +96,4 @@
 		};
 	};
 };
+#include "riva-cpu.dtsi"

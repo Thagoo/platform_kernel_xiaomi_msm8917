@@ -1,4 +1,8 @@
 / {
+     chosen {
+		bootargs = "sched_enable_hmp=0";
+	};
+
       aliases {
                 spi7 = &spi_7;
       };
@@ -113,3 +117,4 @@
 		};
 	};
 };
+#include "rolex-cpu.dtsi"
