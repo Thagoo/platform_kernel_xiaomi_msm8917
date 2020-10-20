@@ -116,6 +116,7 @@
 				bias-pull-up;		/* PULL UP*/
 			};
 		};
+ 		
 		gpio_led_pins {
 			gpio_led_off: gpio_led_off {
 				mux {
