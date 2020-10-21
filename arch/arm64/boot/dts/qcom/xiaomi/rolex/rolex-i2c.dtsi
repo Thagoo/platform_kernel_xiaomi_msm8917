@@ -159,6 +159,7 @@
             goodix,int-sync = <1>;
             goodix,swap-x2y = <0>;
             goodix,esd-protect = <1>;
+	    goodix,slide-wakeup = <1>;
             goodix,pen-suppress-finger = <0>;
             goodix,auto-update = <1>;
             goodix,auto-update-cfg = <0>;
