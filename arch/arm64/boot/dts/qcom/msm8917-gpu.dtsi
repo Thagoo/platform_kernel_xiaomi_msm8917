@@ -93,6 +93,8 @@
 		regulator-names = "vdd";
 		/* GDSC oxili regulators */
 		vdd-supply = <&gdsc_oxili_gx>;
+		/* To disable GPU wake up on touch event */
+		qcom,disable-wake-on-touch;
 
 		/* CPU latency parameter */
 		qcom,pm-qos-active-latency = <651>;
