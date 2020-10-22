@@ -869,6 +869,9 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
 #ifndef SECTOR_SHIFT
 #define SECTOR_SHIFT 9
 #endif
+#ifndef SECTOR_SIZE
+#define SECTOR_SIZE (1 << SECTOR_SHIFT)
+#endif
 
 /*
  * blk_rq_pos()			: the current sector
