@@ -229,9 +229,12 @@
 		qcom,bms-psy-name = "bms";
 		qcom,chg-inhibit-disabled;	
 		qcom,chg-vadc = <&pm8937_vadc>;
+		qcom,thermal-mitigation = <1500 1000 700 700>;
+		qcom,fastchg-current-max-ma = <2000>;
 		qcom,iterm-ma = <150>;
 		status = "ok";
 	};
+
 	cw2015: cw2015@62 {
 		compatible = "cellwise,cw2015";
 		reg = <0x62>;
