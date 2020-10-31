@@ -7,7 +7,6 @@
 #include "rolex-i2c.dtsi"
 #include "rolex-pm.dtsi"
 #include "rolex-msm8917.dtsi"
-#include "rolex-regulator.dtsi"
 #include "rolex-pm8937.dtsi"
 #include "rolex-spmi.dtsi"
 #include "rolex-regulator.dtsi"
