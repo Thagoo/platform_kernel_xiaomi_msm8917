@@ -229,6 +229,9 @@
 		qcom,chg-inhibit-disabled;	
 		qcom,chg-vadc = <&pm8937_vadc>;
 		qcom,iterm-ma = <150>;
+		/* Optional Properties */
+		qcom,fastchg-current-max-ma = <2000>;
+		qcom,thermal-mitigation = <1500 1000 700 700>;
 		status = "ok";
 	};
 	cw2015: cw2015@62 {
