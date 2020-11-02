@@ -361,6 +361,11 @@ struct led_platform_data {
 	struct led_info	*leds;
 };
 
+struct gpio_desc;
+typedef int (*gpio_blink_set_t)(struct gpio_desc *desc, int state,
+				unsigned long *delay_on,
+				unsigned long *delay_off);
+
 /* For the leds-gpio driver */
 struct gpio_led {
 	const char *name;
