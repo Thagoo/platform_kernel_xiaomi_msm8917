@@ -1,6 +1,6 @@
 &rpm_bus {
 	rpm-regulator-smpa1 {
-		pm8917_s1: regulator-s1 {
+		pm8937_s1: regulator-s1 {
 			regulator-min-microvolt = <900000>;
 			regulator-max-microvolt = <1120000>;
 		};
