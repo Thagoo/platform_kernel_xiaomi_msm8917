@@ -80,17 +80,6 @@
 		qcom,ce-opp-freq = <100000000>;
 	};
 };
-
-&spi_7 {
-	status = "okay";
-	irled@0 {
-		compatible = "ir-spi";
-		reg = <0x0>;
-		status = "okay";
-		spi-max-frequency = <50000000>;
-	};
-};
-
 &soc {
        i2c_2: i2c@78b6000 { /* BLSP1 QUP2 */
         aw87319@58{ /*AW87319 PA*/
