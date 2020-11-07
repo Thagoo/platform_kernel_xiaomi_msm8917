@@ -1,0 +1,8 @@
+/ {
+	qrd_batterydata: qcom,battery-data {
+		qcom,batt-id-range-pct = <10>;
+		#include "battery/batterydata-xwd-4v4-3000mah.dtsi"
+		#include "battery/batterydata-mingmei-4v4-3000mah.dtsi"
+		#include "battery/batterydata-default-4v4-3000mah.dtsi"
+	};
+};

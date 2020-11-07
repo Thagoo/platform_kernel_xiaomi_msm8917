@@ -1,0 +1,9 @@
+&soc {
+        tlmm: pinctrl@1000000 {
+		/delete-node/ gpio_led_pins;
+	};
+};
+
+&soc {
+	/delete-node/ spi@7af7000;
+};

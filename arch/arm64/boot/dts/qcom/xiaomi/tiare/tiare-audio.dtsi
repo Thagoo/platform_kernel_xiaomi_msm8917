@@ -1,0 +1,13 @@
+&i2c_6 {
+	status = "ok";
+	aw87329@58 {
+		compatible = "awinic,aw87329_pa";
+		reg = <0x58>;
+		reset-gpio = <&tlmm 124 0>;
+		status = "ok";
+	};
+};
+
+&int_codec {
+	/delete-property/ qcom,msm-spk-ext-pa;
+};
