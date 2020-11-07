@@ -4,8 +4,8 @@
 	cw2017@63 {
 		compatible = "cellwise,cw2017";
 		reg = <0x63>;
-		//vdd-supply = <&pm8917_l5>;
-		vcc_i2c-supply = <&pm8917_l5>;
+		//vdd-supply = <&pm8937_l5>;
+		vcc_i2c-supply = <&pm8937_l5>;
 		//interrupt-parent = <&tlmm>;
 		//interrupts = <46 2>;//cw2017 interrupt pin to gpio46, but not really use this interrupt
 		//pinctrl-names = "default";
