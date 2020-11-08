@@ -447,6 +447,12 @@ config CHARGER_BQ2560
 	  The driver reports the charger status via the power supply framework.
 	  A charger status change triggers an IRQ via the device STAT pin.
 
+config GAUGE_CW2017
+	tristate "CW2017 Battery Fg"
+	depends on I2C
+	help
+	  Say Y to include support for CW2017 Battery FG.
+
 config GAUGE_BQ27426
 	tristate "BQ27426 Battery Fg"
 	depends on I2C
