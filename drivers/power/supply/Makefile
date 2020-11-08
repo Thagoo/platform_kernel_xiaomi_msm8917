@@ -68,6 +68,7 @@ obj-$(CONFIG_CHARGER_BQ24190)	+= bq24190_charger.o
 obj-$(CONFIG_CHARGER_BQ24257)	+= bq24257_charger.o
 obj-$(CONFIG_CHARGER_BQ24735)	+= bq24735-charger.o
 obj-$(CONFIG_CHARGER_BQ2560)    += bq2560x_charger.o
+obj-$(CONFIG_CHARGER_BQ2560_TIARE) += bq2560x_t-charger.o
 obj-$(CONFIG_GAUGE_CW2017)	+= cw2017_fuel_gauge.o
 obj-$(CONFIG_GAUGE_BQ27426)     += bq27426_fg.o
 obj-$(CONFIG_CHARGER_BQ25890)	+= bq25890_charger.o
