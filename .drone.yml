@@ -13,6 +13,6 @@ steps:
             CID:
                     from_secret: cid
     commands:
-      - wget https://raw.githubusercontent.com/Thagoo/triton-scripts/ts-proton-rova/compiler.sh
+      - wget https://raw.githubusercontent.com/Thagoo/triton-scripts/ts-proton-tiare/compiler.sh
       - chmod +x compiler.sh
       - bash compiler.sh
