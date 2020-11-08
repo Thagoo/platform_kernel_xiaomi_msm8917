@@ -119,6 +119,7 @@ struct bq2560x {
 	int status;
 	
 	int call_state;
+	int batfet_reset_enable;
 
 	struct mutex data_lock;
 	struct mutex i2c_rw_lock;
@@ -135,6 +136,7 @@ struct bq2560x {
 	bool batt_present;
 	bool usb_present;
 	int  batt_capacity;
+	int  fake_batt_capacity;
 
 	bool batt_full;
 
@@ -192,6 +194,7 @@ struct bq2560x {
 	int usb_psy_ma;
 	int charge_state;
 	int charging_disabled_status;
+	int force_discharging_status;
 
 	int fault_status;
 
@@ -373,7 +376,21 @@ static void bq2560x_wakeup_src_init(struct bq2560x *bq)
 	wakeup_source_init(&bq->bq2560x_ws.source, "bq2560x");
 }
 
+static int bq2560x_batfet_reset_enable(struct bq2560x *bq)
+{
+	int ret;
+	u8 val;
 
+	if(bq->batfet_reset_enable){
+		val = REG07_BATFET_RST_ENABLE << REG07_BATFET_RST_EN_SHIFT;
+		ret = bq2560x_update_bits(bq, BQ2560X_REG_07, REG07_BATFET_RST_EN_MASK, val);
+	}else{
+		val = REG07_BATFET_RST_DISABLE << REG07_BATFET_RST_EN_SHIFT;
+		ret = bq2560x_update_bits(bq, BQ2560X_REG_07, REG07_BATFET_RST_EN_MASK, val);
+	}
+
+	return ret;
+}
 
 static int bq2560x_enable_otg(struct bq2560x *bq)
 {
@@ -494,7 +511,6 @@ int bq2560x_reset_watchdog_timer(struct bq2560x *bq)
 {
 	u8 val = REG01_WDT_RESET << REG01_WDT_RESET_SHIFT;
 
-	pr_err("bq2560x_reset_watchdog_timer\n");
 	return bq2560x_update_bits(bq, BQ2560X_REG_01, REG01_WDT_RESET_MASK, val);
 }
 EXPORT_SYMBOL_GPL(bq2560x_reset_watchdog_timer);
@@ -773,6 +789,11 @@ static int bq2560x_get_prop_batt_capacity(struct bq2560x *bq)
 	union power_supply_propval batt_prop = {0,};
 	int ret;
 
+	if (bq->fake_batt_capacity >= 0) {
+		bq->batt_capacity = bq->fake_batt_capacity;
+		return 0;
+	}
+
 	ret = bq2560x_get_batt_property(bq,
 					POWER_SUPPLY_PROP_CAPACITY, &batt_prop);
 
@@ -800,7 +821,6 @@ static int bq2560x_get_prop_batt_full(struct bq2560x *bq)
 
 static int bq2560x_get_prop_charge_status(struct bq2560x *bq)
 {
-	union power_supply_propval batt_prop = {0,};
 	int ret;
 	u8 status;
 
@@ -812,12 +832,13 @@ static int bq2560x_get_prop_charge_status(struct bq2560x *bq)
 	mutex_lock(&bq->data_lock);
 	bq->charge_state = (status & REG08_CHRG_STAT_MASK) >> REG08_CHRG_STAT_SHIFT;
 	mutex_unlock(&bq->data_lock);
-
+#if (0)
 	ret = bq2560x_get_batt_property(bq,
 					POWER_SUPPLY_PROP_STATUS, &batt_prop);
 	if (!ret && ((batt_prop.intval == POWER_SUPPLY_STATUS_FULL) ||
 			(bq->jeita_active && (bq->charge_state == CHARGE_STATE_CHGDONE))))
 		return POWER_SUPPLY_STATUS_FULL;
+#endif
 
 	switch(bq->charge_state) {
 		case CHARGE_STATE_FASTCHG:
@@ -835,6 +856,9 @@ static int bq2560x_get_prop_charge_status(struct bq2560x *bq)
 
 static int bq2560x_get_prop_health(struct bq2560x *bq)
 {
+#ifdef CONFIG_DISABLE_TEMP_PROTECT
+	return POWER_SUPPLY_HEALTH_GOOD;
+#else
 	int ret;
 	union power_supply_propval batt_prop = {0,};
 
@@ -860,15 +884,15 @@ static int bq2560x_get_prop_health(struct bq2560x *bq)
 			ret = POWER_SUPPLY_HEALTH_UNKNOWN;
 	}
 	return ret;
+#endif
 }
-
-
 static enum power_supply_property bq2560x_charger_props[] = {
 
 	POWER_SUPPLY_PROP_CHARGE_TYPE, 
 	POWER_SUPPLY_PROP_PRESENT,
 	POWER_SUPPLY_PROP_CHARGING_ENABLED,
 	POWER_SUPPLY_PROP_CHARGING_CALL_STATE,
+	POWER_SUPPLY_PROP_BATFET_RESET_ENABLE,
 	POWER_SUPPLY_PROP_HEALTH,
 	POWER_SUPPLY_PROP_CAPACITY,
 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
@@ -885,52 +909,6 @@ static enum power_supply_property bq2560x_charger_props[] = {
 	POWER_SUPPLY_PROP_RESISTANCE_ID,
 };
 
-void static runin_work(struct bq2560x *bq, int batt_capacity)
-{
-	int rc;
-
-	printk("%s:BatteryTestStatus_enable = %d bq->usb_present = %d \n",
-			__func__,BatteryTestStatus_enable,bq->usb_present);
-
-	if (/*!bq->usb_present || */!BatteryTestStatus_enable) {
-		if (bq->in_hiz) {
-			rc = bq2560x_exit_hiz_mode(bq);
-			if (rc) {
-				dev_err(bq->dev, "Couldn't enable charge rc=%d\n", rc);
-			} else {
-				pr_err("Exit Hiz Successfully\n");
-				bq->in_hiz = false;
-			}
-		}
-		return;
-	}
-
-	if (batt_capacity >= 80) {
-		pr_debug("bq2560x_get_prop_batt_capacity > 80\n");
-		//rc = bq2560x_charging_disable(bq, USER, true);
-		if (!bq->in_hiz) {
-			rc = bq2560x_enter_hiz_mode(bq);
-			if (rc) {
-				dev_err(bq->dev, "Couldn't disenable charge rc=%d\n", rc);
-			} else {
-				pr_err("Enter Hiz Successfully\n");
-				bq->in_hiz = true;
-			}
-		}
-	} else if (batt_capacity < 60) {
-		pr_debug("bq2560x_get_prop_batt_capacity < 60\n");
-		//rc = bq2560x_charging_disable(bq, USER, false);
-		if (bq->in_hiz) {
-			rc = bq2560x_exit_hiz_mode(bq);
-			if (rc) {
-				dev_err(bq->dev, "Couldn't enable charge rc=%d\n", rc);
-			} else {
-				pr_err("Exit Hiz Successfully\n");
-				bq->in_hiz = false;
-			}
-		} 
-	}
-}
 static int bq2560x_charger_get_property(struct power_supply *psy,
 				enum power_supply_property psp,
 				union power_supply_propval *val)
@@ -946,6 +924,9 @@ static int bq2560x_charger_get_property(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_CHARGING_CALL_STATE:
 		val->intval = bq->call_state;
 		break;
+	case POWER_SUPPLY_PROP_BATFET_RESET_ENABLE:
+		val->intval = bq->batfet_reset_enable;
+		break;
 	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
 		val->intval = bq->charge_enabled;
 		break;
@@ -960,9 +941,11 @@ static int bq2560x_charger_get_property(struct power_supply *psy,
 		val->intval = bq2560x_get_prop_health(bq);
 		break;
 	case POWER_SUPPLY_PROP_CAPACITY:
-		bq2560x_get_batt_property(bq, psp, val);
+		if (bq->fake_batt_capacity >= 0)
+			val->intval = bq->fake_batt_capacity;
+		else
+			bq2560x_get_batt_property(bq, psp, val);
 		bq2560x_battery_capacity = val->intval;
-		runin_work(bq, val->intval);
 		break;
 	case POWER_SUPPLY_PROP_SYSTEM_TEMP_LEVEL:
 		val->intval = bq->therm_lvl_sel;
@@ -1083,11 +1066,17 @@ static int bq2560x_charger_set_property(struct power_supply *psy,
 	switch (prop) {
 	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
 		bq2560x_charging_disable(bq, USER, !val->intval);
-
+		bq->force_discharging_status = !val->intval;
+		bq2560x_update_charging_profile(bq);
 		power_supply_changed(bq->batt_psy);
 		power_supply_changed(bq->usb_psy);
 		pr_info("POWER_SUPPLY_PROP_CHARGING_ENABLED: %s\n", 
 				val->intval ? "enable" : "disable");
+		break;
+	case POWER_SUPPLY_PROP_CAPACITY:
+		bq->fake_batt_capacity = val->intval;
+		pr_err("user set bq->fake_batt_capacity = %d\n", bq->fake_batt_capacity);
+		power_supply_changed(bq->batt_psy);
 		break;
 	case POWER_SUPPLY_PROP_SYSTEM_TEMP_LEVEL:
 		bq2560x_system_temp_level_set(bq, val->intval);
@@ -1095,6 +1084,10 @@ static int bq2560x_charger_set_property(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_CHARGING_CALL_STATE:
 		bq->call_state = val->intval;
 		bq2560x_update_charging_profile(bq);
+		break;
+	case POWER_SUPPLY_PROP_BATFET_RESET_ENABLE:
+		bq->batfet_reset_enable = val->intval;
+		bq2560x_batfet_reset_enable(bq);
 		break;
 	default:
 		return -EINVAL;
@@ -1110,6 +1103,7 @@ static int bq2560x_charger_is_writeable(struct power_supply *psy,
 
 	switch (prop) {
 	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
+	case POWER_SUPPLY_PROP_CAPACITY:
 	case POWER_SUPPLY_PROP_CHARGING_CALL_STATE:
 	case POWER_SUPPLY_PROP_SYSTEM_TEMP_LEVEL:
 		ret = 1;
@@ -1177,7 +1171,7 @@ static int bq2560x_update_charging_profile(struct bq2560x *bq)
 	if (bq->call_state == 0) {
 		if (prop.intval == POWER_SUPPLY_TYPE_USB_DCP || prop.intval == POWER_SUPPLY_TYPE_USB_CDP) {
 			if (bq->jeita_active) {
-				icl = bq->jeita_ma;
+				icl = min(calling_current_max,bq->jeita_ma);
 			} else{
 				icl = calling_current_max;
 			}
@@ -1185,6 +1179,11 @@ static int bq2560x_update_charging_profile(struct bq2560x *bq)
 			icl = bq->platform_data->usb.ichg;
 		}
 		pr_err("bq2560x_set_calling_current to =%d\n", icl);
+	}
+
+	if(bq->force_discharging_status) {
+		icl = 100;
+		pr_err("force_discharging: set input current limit to =%d\n", icl);
 	}
 
 	pr_err("charge volt = %d, charge curr = %d, input curr limit = %d\n",
@@ -1251,7 +1250,31 @@ static int bq2560x_system_temp_level_set(struct bq2560x *bq,
 	return ret;
 }
 
-static int pc_suspend;
+static void bq2560x_factory_mode_control_capacity_work(struct bq2560x *bq)
+{
+#if (0)
+#ifdef WT_COMPILE_FACTORY_VERSION
+	int ret;
+
+	pr_err("bq2560x_factory_mode_control_capacity_work\n");
+	if(bq2560x_battery_capacity >= 80 && bq2560x_battery_capacity <=100){
+		ret = bq2560x_charging_disable(bq, SOC, true);
+		if (ret) {
+			dev_err(bq->dev, "factory_mode_control_capacity disable fail: %d\n", ret);
+		}
+	}else if(bq2560x_battery_capacity >= 0 && bq2560x_battery_capacity < 80){
+		ret = bq2560x_charging_disable(bq, SOC, false);
+		if (ret) {
+			dev_err(bq->dev, "actory_mode_control_capacity enable fail: %d\n", ret);
+		}
+	}
+
+#endif
+#endif
+
+}
+
+static int pc_suspend = 0;
 static void bq2560x_external_power_changed(struct power_supply *psy)
 {
 	struct bq2560x *bq = power_supply_get_drvdata(psy);
@@ -1919,12 +1942,6 @@ static void bq2560x_check_batt_full(struct bq2560x *bq)
 	if (!ret) {
 		chg_disabled_fc = !!(bq->charging_disabled_status & BATT_FC);
 		if (chg_disabled_fc ^ bq->batt_full) {
-			ret = bq2560x_charging_disable(bq, BATT_FC, bq->batt_full);
-			if (ret) {
-				pr_err("failed to %s charging, ret = %d\n", 
-						bq->batt_full ? "disable" : "enable",
-						ret);
-			}
 			power_supply_changed(bq->batt_psy);
 			power_supply_changed(bq->usb_psy);
 		}
@@ -1966,7 +1983,7 @@ static void bq2560x_charge_jeita_workfunc(struct work_struct *work)
 				struct bq2560x, charge_jeita_work.work);
 
 	bq2560x_reset_watchdog_timer(bq);
-
+	bq2560x_factory_mode_control_capacity_work(bq);
 	bq2560x_check_batt_pres(bq);
 	bq2560x_check_batt_full(bq);
 	bq2560x_check_batt_capacity(bq);
@@ -2005,6 +2022,7 @@ static void bq2560x_dump_status(struct bq2560x* bq)
 	u8 addr;
 	int ret;
 	u8 val;
+#if 0
 	union power_supply_propval batt_prop = {0,};
 	
 	ret = bq2560x_get_batt_property(bq,
@@ -2012,6 +2030,7 @@ static void bq2560x_dump_status(struct bq2560x* bq)
 
 	if (!ret)
 	 		pr_err("FG current:%d\n", batt_prop.intval);
+#endif
 
 	pr_err("bq Reg[0x00 -0x0B] = ");
 	for (addr = 0x0; addr <= 0x0B; addr++) {
@@ -2368,6 +2387,8 @@ static int bq2560x_charger_probe(struct i2c_client *client,
 
 	bq->dev = &client->dev;
 	bq->bms_psy = bms_psy;
+	bq->fake_batt_capacity = -EINVAL;
+	bq->force_discharging_status = 0;
 
 	bq->client = client;
 	i2c_set_clientdata(client, bq);
@@ -2474,8 +2495,12 @@ static int bq2560x_charger_probe(struct i2c_client *client,
 	bq2560x_exit_hiz_mode(bq);
 	determine_initial_status(bq);
 
+	bq->batfet_reset_enable = 1;
+	bq2560x_batfet_reset_enable(bq);
 
-	pr_err("bq2560x probe successfully, Part Num:%d, Revision:%d\n!", 
+
+
+	pr_err("bq2560x probe successfully, Part Num:%d, Revision:%d\n!",
 				bq->part_no, bq->revision);
 	
 	return 0;
