@@ -23,7 +23,7 @@
 #undef KERNEL_VERSION
 #define KERNEL_VERSION(a, b, c) (((a) << 16) + ((b) << 8) + (c))
 #undef LINUX_VERSION_CODE
-#define LINUX_VERSION_CODE KERNEL_VERSION(3, 1, 8)
+#define LINUX_VERSION_CODE KERNEL_VERSION(4, 0, 9)
 
 #define SMB_VTG_MIN_UV		1800000
 #define SMB_VTG_MAX_UV		1800000
@@ -123,7 +123,7 @@ struct cw_battery {
 	struct delayed_work interrupt_work;
 #endif
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 1, 0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 0, 9)
 	struct power_supply cw_bat;
 #else
 	struct power_supply *cw_bat;
@@ -592,7 +592,7 @@ static void cw_bat_work(struct work_struct *work)
 
 		cw_bat->voltage_before_change = cw_bat->voltage;
 		#ifdef CW_PROPERTIES
-		#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 1, 0)
+		#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 0, 9)
 		power_supply_changed(&cw_bat->cw_bat);
 		#else
 		power_supply_changed(cw_bat->cw_bat);
@@ -644,7 +644,7 @@ static int cw_get_usb_present(struct cw_battery *cw_bat)
 	union power_supply_propval prop = {0,};
 	int ret;
 
-	ret = cw_bat->usb_psy->get_property(cw_bat->usb_psy,
+	ret = power_supply_get_property(cw_bat->usb_psy,
 							POWER_SUPPLY_PROP_PRESENT, &prop);
 	if (ret < 0)
 		pr_err("could not read USB current_max property, ret=%d\n", ret);
@@ -683,7 +683,7 @@ static int cw_battery_get_property(struct power_supply *psy,
 {
     int ret = 0;
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 1, 0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 0, 9)
     struct cw_battery *cw_bat;
     cw_bat = container_of(psy, struct cw_battery, cw_bat);
 #else
@@ -805,7 +805,7 @@ static int cw_battery_set_property(struct power_supply *psy,
 {
 	int ret = 0;
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 1, 0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 0, 9)
 	struct cw_battery *cw_bat;
 	cw_bat = container_of(psy, struct cw_battery, cw_bat);
 #else
@@ -906,13 +906,16 @@ static int cw_get_battery_profile(struct cw_battery *cw_bat)
 	const char *data;
 	int data_len = 0;
 	int i = 0;
+	union power_supply_propval val;
 
 	batt_node = of_parse_phandle(cw_bat->dev->of_node, "qcom,battery-data", 0);
 	if (!batt_node) {
 		pr_err("cw2017: No Batterydata is available\n");
 		return -ENODATA;
 	}
-	batt_data_node = of_batterydata_get_best_profile(batt_node, CW_PROPERTIES, NULL);
+	if (val.intval <= 0)
+		return 0;
+	batt_data_node = of_batterydata_get_best_profile(batt_node, val.intval / 1000, NULL);
 	if (!batt_data_node) {
 		pr_err("cw2017: couldn't find battery profile handle\n");
 		return -ENODATA;
@@ -959,7 +962,7 @@ static int cw2017_probe(struct i2c_client *client, const struct i2c_device_id *i
 #endif
 
 #ifdef CW_PROPERTIES
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 0)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 0, 9)
 	struct power_supply_desc *psy_desc;
 	struct power_supply_config psy_cfg = {0};
 #endif
@@ -1049,7 +1052,7 @@ static int cw2017_probe(struct i2c_client *client, const struct i2c_device_id *i
     }
 
 #ifdef CW_PROPERTIES
-#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 1, 0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 0, 9)
 	cw_bat->cw_bat.name = CW_PROPERTIES;
 	cw_bat->cw_bat.type = POWER_SUPPLY_TYPE_BMS;
 	cw_bat->cw_bat.properties = cw_battery_properties;
