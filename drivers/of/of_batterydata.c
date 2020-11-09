@@ -318,6 +318,11 @@ static int64_t of_batterydata_convert_battery_id_kohm(int batt_id_uv,
 #ifdef CONFIG_MACH_XIAOMI_ROLEX
 extern int battid_resister;
 #endif
+#ifdef CONFIG_MACH_XIAOMI_TIARE
+static char *default_batt_type = "Generic_Battery";
+
+extern int cw_get_battid_for_profile_check(void);
+#endif
 
 int battery_type_id = 0 ;
 
@@ -337,7 +342,10 @@ struct device_node *of_batterydata_get_best_profile(
 	batt_id_kohm = battid_resister;
 	pr_err("C3N batt_id = %d\n", batt_id_kohm);
 #endif
-
+#ifdef CONFIG_MACH_XIAOMI_TIARE
+	batt_id_kohm = cw_get_battid_for_profile_check();
+	pr_err("C3G batt_id_kohm = %d\n", batt_id_kohm);
+#endif
 	/* read battery id range percentage for best profile */
 	rc = of_property_read_u32(batterydata_container_node,
 			"qcom,batt-id-range-pct", &id_range_pct);
@@ -387,6 +395,23 @@ struct device_node *of_batterydata_get_best_profile(
 			}
 		}
 	}
+#ifdef CONFIG_MACH_XIAOMI_TIARE
+	if (best_node == NULL) {
+		for_each_child_of_node(batterydata_container_node, node) {
+			if (default_batt_type != NULL) {
+				rc = of_property_read_string(node, "qcom,battery-type",
+								&battery_type);
+				if (!rc && strcmp(battery_type, default_batt_type) == 0) {
+					best_node = node;
+					best_id_kohm = batt_id_kohm;
+					default_id = true;
+					pr_err("No battery data found, Use default battery data\n");
+					break;
+				}
+			}
+		}
+	}
+#endif
 
 	if (best_node == NULL) {
 		pr_err("No battery data found\n");
@@ -459,7 +484,7 @@ int of_batterydata_read_data(struct device_node *batterydata_container_node,
 			}
 		}
 	}
-
+	
 	if (best_node == NULL) {
 		pr_err("No battery data found\n");
 		return -ENODATA;
