@@ -90,7 +90,7 @@ static void set_boost_policy(int type)
 		return;
 	}
 
-	if (sysctl_sched_is_big_little) {
+	if (min_possible_efficiency != max_possible_efficiency) {
 		boost_policy = SCHED_BOOST_ON_BIG;
 		return;
 	}
