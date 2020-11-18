@@ -1,6 +1,8 @@
+ifneq ($(CONFIG_MACH_XIAOMI),y)
 dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+endif
 
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 	dtbo-$(CONFIG_ARCH_SDM845) += \
@@ -564,6 +566,7 @@ dtb-$(CONFIG_ARCH_MSM8953) += msm8953-cdp.dtb \
 	msm8953-pmi632-cdp-s2.dtb \
 	apq8053-batcam.dtb
 
+ifneq ($(CONFIG_MACH_XIAOMI),y)
 dtb-$(CONFIG_ARCH_MSM8937) += msm8937-pmi8950-mtp.dtb \
 	msm8937-interposer-sdm439-cdp.dtb \
 	msm8937-interposer-sdm439-mtp.dtb \
@@ -574,6 +577,7 @@ dtb-$(CONFIG_ARCH_MSM8937) += msm8937-pmi8950-mtp.dtb \
 dtb-$(CONFIG_ARCH_MSM8940) += msm8940-pmi8937-mtp.dtb \
 	msm8940-pmi8950-mtp.dtb \
 	msm8940-pmi8940-mtp.dtb
+endif
 
 ifeq ($(CONFIG_MACH_XIAOMI),y)
 dtb-$(CONFIG_MACH_XIAOMI_ROLEX) += msm8917-S88503.dtb
