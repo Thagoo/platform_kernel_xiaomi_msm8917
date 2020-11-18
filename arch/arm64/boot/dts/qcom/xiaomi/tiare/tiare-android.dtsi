@@ -6,6 +6,10 @@
 				type = "squashfs";
 				fsmgr_flags = "wait";
 			};
+			system {
+				type = "squashfs";
+				fsmgr_flags = "wait";
+			};
 		};
 	};
 };
