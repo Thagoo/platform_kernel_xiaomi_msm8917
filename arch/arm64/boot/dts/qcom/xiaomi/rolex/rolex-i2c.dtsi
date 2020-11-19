@@ -224,6 +224,7 @@
 		qcom,irq-gpio = <&tlmm 61 0x0>;
 		qcom,float-voltage-mv = <4400>;
 		qcom,recharge-mv = <50>;
+		qcom,battery-data = <&qrd_batterydata>;
 		regulator-name = "smb358_otg_vreg";
 		qcom,bms-psy-name = "bms";
 		qcom,chg-inhibit-disabled;	
@@ -240,6 +241,7 @@
 		vcc_i2c-supply = <&pm8937_l5>;
 		interrupt-parent = <&tlmm>;
 		interrupts = <86 8>;
+		qcom,battery-data = <&qrd_batterydata>;
 		cw2015,irq-gpio=<86>;
 	};
 };
