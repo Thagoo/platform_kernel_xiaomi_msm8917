@@ -321,7 +321,7 @@ extern int battid_resister;
 #ifdef CONFIG_MACH_XIAOMI_TIARE
 static char *default_batt_type = "Generic_Battery";
 
-extern int cw_get_battid_for_profile_check(void);
+//extern int cw_get_battid_for_profile_check(void);
 #endif
 
 int battery_type_id = 0 ;
@@ -342,7 +342,7 @@ struct device_node *of_batterydata_get_best_profile(
 	batt_id_kohm = battid_resister;
 	pr_err("C3N batt_id = %d\n", batt_id_kohm);
 #endif
-#ifdef CONFIG_MACH_XIAOMI_TIARE
+#ifndef CONFIG_MACH_XIAOMI_TIARE
 	batt_id_kohm = cw_get_battid_for_profile_check();
 	pr_err("C3G batt_id_kohm = %d\n", batt_id_kohm);
 #endif
