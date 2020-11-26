@@ -116,6 +116,17 @@
 				bias-pull-up;		/* PULL UP*/
 			};
 		};
+		tps65132_en_default: tps65132_en_default {
+			mux {
+				pins = "gpio126", "gpio127";
+				function = "gpio";
+			};
+			config {
+				pins = "gpio126", "gpio127";
+				drive-strength = <2>;
+				bias-pull-down;
+			};
+		};
  		
 		gpio_led_pins {
 			gpio_led_off: gpio_led_off {
