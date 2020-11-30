@@ -225,6 +225,50 @@
 	pinctrl-0 = <&uart_console_active>;
 };
 
+&dsi_panel_pwr_supply {
+			#address-cells = <0x1>;
+			#size-cells = <0x0>;
+			linux,phandle = <0x18e>;
+			phandle = <0x18e>;
+
+			qcom,panel-supply-entry@0 {
+				reg = <0x0>;
+				qcom,supply-name = "vdd";
+				qcom,supply-min-voltage = <0x2b7cd0>;
+				qcom,supply-max-voltage = <0x2b7cd0>;
+				qcom,supply-enable-load = <0x186a0>;
+				qcom,supply-disable-load = <0x64>;
+			};
+
+			qcom,panel-supply-entry@1 {
+				reg = <0x1>;
+				qcom,supply-name = "vddio";
+				qcom,supply-min-voltage = <0x1b7740>;
+				qcom,supply-max-voltage = <0x1b7740>;
+				qcom,supply-enable-load = <0x186a0>;
+				qcom,supply-disable-load = <0x64>;
+			};
+
+			qcom,panel-supply-entry@2 {
+				reg = <0x2>;
+				qcom,supply-name = "lab";
+				qcom,supply-min-voltage = <0x4630c0>;
+				qcom,supply-max-voltage = <0x5b8d80>;
+				qcom,supply-enable-load = <0x186a0>;
+				qcom,supply-disable-load = <0x64>;
+			};
+
+			qcom,panel-supply-entry@3 {
+				reg = <0x3>;
+				qcom,supply-name = "ibb";
+				qcom,supply-min-voltage = <0x4630c0>;
+				qcom,supply-max-voltage = <0x5b8d80>;
+				qcom,supply-enable-load = <0x186a0>;
+				qcom,supply-disable-load = <0x64>;
+				qcom,supply-post-on-sleep = <0x14>;
+			};
+		};
+
 &mdss_dsi0 {
 	/delete-property/ qcom,dsi-pref-prim-pan;
 	/delete-property/ qcom,platform-enable-gpio;
