@@ -201,6 +201,12 @@ config MACH_XIAOMI
 	help
 	  This enables support for Xiaomi.
 
+config MACH_ASUS
+	bool "Enable support for ASUS"
+        select ARCH_MSM8917
+	help
+	  This enables support for ASUS.
+
 config MACH_XIAOMI_ROLEX
 	bool "Enable support for Xiaomi Rolex"
         select ARCH_XIAOMI
@@ -212,6 +218,12 @@ config MACH_XIAOMI_RIVA
         select ARCH_XIAOMI
 	help
 	  This enables support for Xiaomi Riva.
+
+config MACH_ASUS_X00P
+	bool "Enable support for X00P"
+        select MACH_ASUS
+	help
+	  This enables support for ASUS X00P.
 
 config ARCH_QM215
 	bool "Enable Support for Qualcomm Technologies Inc. QM215"
