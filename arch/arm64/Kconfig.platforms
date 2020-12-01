@@ -213,6 +213,12 @@ config MACH_XIAOMI_RIVA
 	help
 	  This enables support for Xiaomi Riva.
 
+config MACH_XIAOMI_TIARE
+	bool "Enable support for Xiaomi Tiare"
+        select ARCH_XIAOMI
+	help
+	  This enables support for Xiaomi Tiare.
+
 config ARCH_QM215
 	bool "Enable Support for Qualcomm Technologies Inc. QM215"
 	depends on ARCH_QCOM
