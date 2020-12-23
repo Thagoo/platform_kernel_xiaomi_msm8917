@@ -579,11 +579,6 @@ dtb-$(CONFIG_ARCH_MSM8940) += msm8940-pmi8937-mtp.dtb \
 	msm8940-pmi8940-mtp.dtb
 endif
 
-ifeq ($(CONFIG_MACH_XIAOMI),y)
-dtb-$(CONFIG_MACH_XIAOMI_ROLEX) += msm8917-S88503.dtb
-dtb-$(CONFIG_MACH_XIAOMI_RIVA) += msm8917-S88505.dtb
-dtb-$(CONFIG_MACH_XIAOMI_TIARE) += msm8917-S88508.dtb
-else
 dtb-$(CONFIG_ARCH_MSM8917) += msm8917-pmi8950-mtp.dtb \
 	msm8917-pmi8950-cdp.dtb \
 	msm8917-pmi8950-rcm.dtb \
@@ -602,7 +597,6 @@ dtb-$(CONFIG_ARCH_MSM8917) += msm8917-pmi8950-mtp.dtb \
 	msm8917-pmi8940-mtp.dtb \
 	msm8917-pmi8940-cdp.dtb \
 	msm8917-pmi8940-rcm.dtb
-endif
 
 dtb-$(CONFIG_ARCH_QM215) += qm215-qrd.dtb \
 	qcm2150-qrd.dtb

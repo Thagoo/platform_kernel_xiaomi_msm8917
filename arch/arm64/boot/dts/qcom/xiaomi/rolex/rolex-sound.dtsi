@@ -1,3 +1,0 @@
-&int_codec {
-	qcom,model = "msm8917-sku5-snd-card";
-};
