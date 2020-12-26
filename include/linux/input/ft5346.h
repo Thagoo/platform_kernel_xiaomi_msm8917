@@ -4,7 +4,6 @@
  *
  * Copyright (c) 2010  Focal tech Ltd.
  * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
- * Copyright (C) 2018 XiaoMi, Inc.
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -63,7 +62,7 @@
 #define VENDOR_O_FILM		0x51
 #define VENDOR_Lens		0x3B
 #define VENDOR_DS			0x53
-
+#define VENDOR_TRULY			0x5A
 /*IC name*/
 
 #define TP_IC_FT5X06               0x55
@@ -88,7 +87,7 @@
 #define TP_OUFEI      0x34
 #define  TP_LENS      0x32
 #define  TP_DS           0x45
-
+#define  TP_TRULY           0x47
 /*LCD Maker*/
 #define TP_TIANMA      0x36
 
@@ -156,12 +155,12 @@
 * make sure the application data is valid.
 */
 #define FT_FW_CHECK(x, ts_data) \
-	(ts_data->family_id == FT6X36_ID ? \
-	(((x)->data[0x104] ^ (x)->data[0x105]) == 0xFF \
-	&& ((x)->data[0x106] ^ (x)->data[0x107]) == 0xFF) : \
-	(((x)->data[(x)->size - 8] ^ (x)->data[(x)->size - 6]) == 0xFF \
-	&& ((x)->data[(x)->size - 7] ^ (x)->data[(x)->size - 5]) == 0xFF \
-	&& ((x)->data[(x)->size - 3] ^ (x)->data[(x)->size - 4]) == 0xFF))
+    (ts_data->family_id == FT6X36_ID ? \
+    (((x)->data[0x104] ^ (x)->data[0x105]) == 0xFF \
+    && ((x)->data[0x106] ^ (x)->data[0x107]) == 0xFF) : \
+    (((x)->data[(x)->size - 8] ^ (x)->data[(x)->size - 6]) == 0xFF \
+    && ((x)->data[(x)->size - 7] ^ (x)->data[(x)->size - 5]) == 0xFF \
+    && ((x)->data[(x)->size - 3] ^ (x)->data[(x)->size - 4]) == 0xFF))
 
 #define FT_MAX_TRIES        5
 #define FT_RETRY_DLY        20
@@ -173,7 +172,7 @@
 #define FT_FW_PKT_DLY_MS    20
 #define FT_FW_LAST_PKT      0x6ffa
 #define FT_EARSE_DLY_MS     100
-#define FT_55_AA_DLY_NS     5000
+#define FT_55_AA_DLY_NS     5
 
 #define FT_UPGRADE_LOOP     30
 #define FT_CAL_START        0x04
@@ -198,100 +197,106 @@
 #define FT_MAGIC_BLOADER_GZF_30 0x7ff4
 #define FT_MAGIC_BLOADER_GZF    0x7bf4
 
-enum {
-	FT_BLOADER_VERSION_LZ4 = 0,
-	FT_BLOADER_VERSION_Z7 = 1,
-	FT_BLOADER_VERSION_GZF = 2,
+enum
+{
+    FT_BLOADER_VERSION_LZ4 = 0,
+    FT_BLOADER_VERSION_Z7 = 1,
+    FT_BLOADER_VERSION_GZF = 2,
 };
 
-enum {
-	FT_FT5336_FAMILY_ID_0x11 = 0x11,
-	FT_FT5336_FAMILY_ID_0x12 = 0x12,
-	FT_FT5336_FAMILY_ID_0x13 = 0x13,
-	FT_FT5336_FAMILY_ID_0x14 = 0x14,
+enum
+{
+    FT_FT5336_FAMILY_ID_0x11 = 0x11,
+    FT_FT5336_FAMILY_ID_0x12 = 0x12,
+    FT_FT5336_FAMILY_ID_0x13 = 0x13,
+    FT_FT5336_FAMILY_ID_0x14 = 0x14,
 };
 
-struct fw_upgrade_info {
-	bool auto_cal;
-	u16 delay_aa;
-	u16 delay_55;
-	u8 upgrade_id_1;
-	u8 upgrade_id_2;
-	u16 delay_readid;
-	u16 delay_erase_flash;
+struct fw_upgrade_info
+{
+    bool auto_cal;
+    u16 delay_aa;
+    u16 delay_55;
+    u8 upgrade_id_1;
+    u8 upgrade_id_2;
+    u16 delay_readid;
+    u16 delay_erase_flash;
 };
 
-struct Upgrade_Info {
-	u8 CHIP_ID;
-	u8 FTS_NAME[20];
-	u8 TPD_MAX_POINTS;
-	u8 AUTO_CLB;
-	u16 delay_aa;       /*delay of write FT_UPGRADE_AA */
-	u16 delay_55;       /*delay of write FT_UPGRADE_55 */
-	u8 upgrade_id_1;    /*upgrade id 1 */
-	u8 upgrade_id_2;    /*upgrade id 2 */
-	u16 delay_readid;   /*delay of read id */
-	u16 delay_earse_flash; /*delay of earse flash*/
+struct Upgrade_Info
+{
+    u8 CHIP_ID;
+    u8 FTS_NAME[20];
+    u8 TPD_MAX_POINTS;
+    u8 AUTO_CLB;
+    u16 delay_aa;       /*delay of write FT_UPGRADE_AA */
+    u16 delay_55;       /*delay of write FT_UPGRADE_55 */
+    u8 upgrade_id_1;    /*upgrade id 1 */
+    u8 upgrade_id_2;    /*upgrade id 2 */
+    u16 delay_readid;   /*delay of read id */
+    u16 delay_earse_flash; /*delay of earse flash*/
 };
 
 
-struct ft5x06_ts_platform_data {
-	struct fw_upgrade_info info;
-	const char *name;
-	const char *fw_name;
-	u32 irqflags;
-	u32 irq_gpio;
-	u32 irq_gpio_flags;
-	u32 reset_gpio;
-	u32 reset_gpio_flags;
-	u32 family_id;
-	u32 x_max;
-	u32 y_max;
-	u32 x_min;
-	u32 y_min;
-	u32 panel_minx;
-	u32 panel_miny;
-	u32 panel_maxx;
-	u32 panel_maxy;
-	u32 group_id;
-	u32 hard_rst_dly;
-	u32 soft_rst_dly;
-	u32 num_max_touches;
-	bool fw_vkey_support;
-	bool no_force_update;
-	bool i2c_pull_up;
-	bool ignore_id_check;
-	int (*power_init) (bool);
-	int (*power_on) (bool);
+struct ft5x06_ts_platform_data
+{
+    struct fw_upgrade_info info;
+    const char *name;
+    const char *fw_name;
+    u32 irqflags;
+    u32 irq_gpio;
+    u32 irq_gpio_flags;
+    u32 reset_gpio;
+    u32 reset_gpio_flags;
+    u32 family_id;
+    u32 x_max;
+    u32 y_max;
+    u32 x_min;
+    u32 y_min;
+    u32 panel_minx;
+    u32 panel_miny;
+    u32 panel_maxx;
+    u32 panel_maxy;
+    u32 group_id;
+    u32 hard_rst_dly;
+    u32 soft_rst_dly;
+    u32 num_max_touches;
+    bool fw_vkey_support;
+    bool no_force_update;
+    bool i2c_pull_up;
+    bool ignore_id_check;
+    int (*power_init) (bool);
+    int (*power_on) (bool);
 };
 
-struct ft5x06_ts_data {
-	struct i2c_client *client;
-	struct input_dev *input_dev;
-	const struct ft5x06_ts_platform_data *pdata;
-	struct regulator *vdd;
-	struct regulator *vcc_i2c;
-	char fw_name[FT_FW_NAME_MAX_LEN];
-	u8 lockdown_info[FT_LOCKDOWN_SIZE];
-	bool loading_fw;
-	u8 family_id;
-	struct dentry *dir;
-	u16 addr;
-	bool suspended;
-	char *ts_info;
-	u8 *tch_data;
-	u32 tch_data_len;
-	u8 fw_ver[3];
-	u8 fw_vendor_id;
+struct ft5x06_ts_data
+{
+    struct i2c_client *client;
+    struct input_dev *input_dev;
+    const struct ft5x06_ts_platform_data *pdata;
+    struct regulator *vdd;
+    struct regulator *vcc_i2c;
+    char fw_name[FT_FW_NAME_MAX_LEN];
+    u8 lockdown_info[FT_LOCKDOWN_SIZE];
+    bool loading_fw;
+    u8 family_id;
+    struct dentry *dir;
+    u16 addr;
+    bool suspended;
+    char *ts_info;
+    u8 *tch_data;
+    u32 tch_data_len;
+    u8 fw_ver[3];
+    u8 fw_vendor_id;
 #if defined(CONFIG_FB)
-	struct notifier_block fb_notif;
+    struct notifier_block fb_notif;
 	struct work_struct fb_notify_work;
 #elif defined(CONFIG_HAS_EARLYSUSPEND)
-	struct early_suspend early_suspend;
+    struct early_suspend early_suspend;
 #endif
-	struct pinctrl *ts_pinctrl;
-	struct pinctrl_state *gpio_state_active;
-	struct pinctrl_state *gpio_state_suspend;
+    struct pinctrl *ts_pinctrl;
+    struct pinctrl_state *gpio_state_active;
+    struct pinctrl_state *gpio_state_suspend;
 };
 
 
@@ -312,7 +317,7 @@ struct ft5x06_ts_data {
 
 
 #if CTP_PROC_INTERFACE
-extern int fts_open_short_test(char *ini_file_name, char *bufdest, ssize_t *pinumread);
+extern int fts_open_short_test(char *ini_file_name, char *bufdest, ssize_t* pinumread);
 #endif
 #define WT_ADD_CTP_INFO    1
 #define WT_CTP_GESTURE_SUPPORT 1
@@ -335,14 +340,14 @@ extern int fts_open_short_test(char *ini_file_name, char *bufdest, ssize_t *pinu
 
 #define CTP_ERROR(fmt, arg...)          printk("FT5X06-TP-TAG ERROR:"fmt"\n", ##arg)
 
-#define CTP_DEBUG(fmt, arg...)          do {\
-									     if (CTP_DEBUG_ON)\
-									     printk("FT5X06-TP-TAG DEBUG:[%d]"fmt"\n", __LINE__, ##arg);\
-									   } while (0)
-#define CTP_DEBUG_FUNC()               do {\
-									     if (CTP_DEBUG_FUNC_ON)\
-									     printk("FT5X06-TP-TAG Func:%s@Line:%d\n", __func__, __LINE__);\
-									   } while (0)
+#define CTP_DEBUG(fmt, arg...)          do{\
+                                         if(CTP_DEBUG_ON)\
+                                         printk("FT5X06-TP-TAG DEBUG:[%d]"fmt"\n", __LINE__, ##arg);\
+                                       }while(0)
+#define CTP_DEBUG_FUNC()               do{\
+                                         if(CTP_DEBUG_FUNC_ON)\
+                                         printk("FT5X06-TP-TAG Func:%s@Line:%d\n", __func__, __LINE__);\
+                                       }while(0)
 
 
 #endif
