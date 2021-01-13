@@ -84,7 +84,7 @@ enum {
 static const DECLARE_TLV_DB_SCALE(analog_gain, 0, 25, 1);
 static struct snd_soc_dai_driver msm_anlg_cdc_i2s_dai[];
 
-static bool spkr_boost_en;
+static bool spkr_boost_en = true;
 
 static char on_demand_supply_name[][MAX_ON_DEMAND_SUPPLY_NAME_LENGTH] = {
 	"cdc-vdd-mic-bias",
