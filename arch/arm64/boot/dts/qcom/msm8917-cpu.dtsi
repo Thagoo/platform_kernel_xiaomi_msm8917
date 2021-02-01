@@ -21,11 +21,7 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 		cpu-map {
-
 			cluster0 {
-			};
-
-			cluster1 {
 				core0 {
 					cpu = <&CPU0>;
 				};
@@ -126,7 +122,6 @@
 				qcom,dump-size = <0x9000>;
 			};
 		};
-
 	};
 
 	energy_costs: energy-costs {
@@ -135,11 +130,8 @@
 		CPU_COST_0: core-cost0 {
 			busy-cost-data = <
 				 960000 159
-				 998400 172
 				1094400 207
-				1209600 244
 				1248000 256
-				1305600 283
 				1401000 327
 				1497600 343
 			>;
@@ -150,11 +142,8 @@
 		CLUSTER_COST_0: cluster-cost0 {
 			busy-cost-data = <
 				 960000 53
-				 998400 55
 				1094400 61
-				1209600 68
 				1248000 71
-				1305600 77
 				1401000 85
 				1497600 88
 			>;
