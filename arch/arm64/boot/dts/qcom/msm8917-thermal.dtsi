@@ -353,7 +353,7 @@
 			};
 			cx_vdd_cdev {
 				trip = <&aoss_lowf>;
-				cooling-device = <&pm8937_cx_cdev 0 0>;
+				cooling-device = <&pm8917_cx_cdev 0 0>;
 			};
 			modem_vdd_cdev {
 				trip = <&aoss_lowf>;

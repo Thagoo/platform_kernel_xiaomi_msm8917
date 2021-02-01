@@ -492,9 +492,9 @@
 			<0xb016000 0x00040>,
 			<0x00a6018 0x00004>;
 		reg-names = "cc_base", "apcs_c1_base", "efuse";
-		vdd_dig-supply = <&pm8937_s2_level>;
-		vdd_hf_dig-supply = <&pm8937_s2_level_ao>;
-		vdd_hf_pll-supply = <&pm8937_l7_ao>;
+		vdd_dig-supply = <&pm8917_s2_level>;
+		vdd_hf_dig-supply = <&pm8917_s2_level_ao>;
+		vdd_hf_pll-supply = <&pm8917_l7_ao>;
 		qcom,gfx3d_clk_src-opp-store-vcorner = <&msm_gpu>;
 		#clock-cells = <1>;
 		#reset-cells = <1>;
@@ -690,9 +690,9 @@
 		interrupts = <0 134 0>,<0 140 0>;
 		interrupt-names = "core_irq", "async_irq";
 
-		hsusb_vdd_dig-supply = <&pm8937_l2>;
-		HSUSB_1p8-supply = <&pm8937_l7>;
-		HSUSB_3p3-supply = <&pm8937_l13>;
+		hsusb_vdd_dig-supply = <&pm8917_l2>;
+		HSUSB_1p8-supply = <&pm8917_l7>;
+		HSUSB_3p3-supply = <&pm8917_l13>;
 		qcom,vdd-voltage-level = <0 1200000 1200000>;
 		vbus_otg-supply = <&smbcharger_charger_otg>;
 
@@ -1368,12 +1368,12 @@
 			"rmb_base", "restart_reg";
 
 		interrupts = <GIC_SPI 24 IRQ_TYPE_EDGE_RISING>;
-		vdd_mss-supply = <&pm8937_s1>;
-		vdd_cx-supply = <&pm8937_s2_level>;
+		vdd_mss-supply = <&pm8917_s1>;
+		vdd_cx-supply = <&pm8917_s2_level>;
 		vdd_cx-voltage = <RPM_SMD_REGULATOR_LEVEL_TURBO>;
-		vdd_mx-supply = <&pm8937_l3_level_ao>;
+		vdd_mx-supply = <&pm8917_l3_level_ao>;
 		vdd_mx-uV = <RPM_SMD_REGULATOR_LEVEL_TURBO>;
-		vdd_pll-supply = <&pm8937_l7>;
+		vdd_pll-supply = <&pm8917_l7>;
 		qcom,vdd_pll = <1800000>;
 		vdd_mss-uV = <RPM_SMD_REGULATOR_LEVEL_TURBO>;
 
@@ -1412,7 +1412,7 @@
 		reg = <0xc200000 0x00100>;
 		interrupts = <GIC_SPI 293 IRQ_TYPE_EDGE_RISING>;
 
-		vdd_cx-supply = <&pm8937_s2_level>;
+		vdd_cx-supply = <&pm8917_s2_level>;
 		qcom,proxy-reg-names = "vdd_cx";
 		qcom,vdd_cx-uV-uA = <RPM_SMD_REGULATOR_LEVEL_TURBO 100000>;
 
@@ -1453,7 +1453,7 @@
 		reg = <0x0a21b000 0x3000>;
 		interrupts = <GIC_SPI 149 IRQ_TYPE_EDGE_RISING>;
 
-		vdd_pronto_pll-supply = <&pm8937_l7>;
+		vdd_pronto_pll-supply = <&pm8917_l7>;
 		proxy-reg-names = "vdd_pronto_pll";
 		vdd_pronto_pll-uV-uA = <1800000 18000>;
 		clocks = <&clock_gcc clk_xo_pil_pronto_clk>,
@@ -1667,13 +1667,13 @@
 		interrupts = <0 145 0 0 146 0>;
 		interrupt-names = "wcnss_wlantx_irq", "wcnss_wlanrx_irq";
 
-		qcom,pronto-vddmx-supply = <&pm8937_l3_level_ao>;
-		qcom,pronto-vddcx-supply = <&pm8937_s2_level>;
-		qcom,pronto-vddpx-supply = <&pm8937_l5>;
-		qcom,iris-vddxo-supply   = <&pm8937_l7>;
-		qcom,iris-vddrfa-supply  = <&pm8937_l19>;
-		qcom,iris-vddpa-supply   = <&pm8937_l9>;
-		qcom,iris-vdddig-supply  = <&pm8937_l5>;
+		qcom,pronto-vddmx-supply = <&pm8917_l3_level_ao>;
+		qcom,pronto-vddcx-supply = <&pm8917_s2_level>;
+		qcom,pronto-vddpx-supply = <&pm8917_l5>;
+		qcom,iris-vddxo-supply   = <&pm8917_l7>;
+		qcom,iris-vddrfa-supply  = <&pm8917_l19>;
+		qcom,iris-vddpa-supply   = <&pm8917_l9>;
+		qcom,iris-vdddig-supply  = <&pm8917_l5>;
 
 		qcom,iris-vddxo-voltage-level = <1800000 0 1800000>;
 		qcom,iris-vddrfa-voltage-level = <1300000 0 1300000>;

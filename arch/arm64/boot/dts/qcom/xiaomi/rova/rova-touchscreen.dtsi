@@ -20,8 +20,8 @@
 			reg = <0x38>;
 			interrupt-parent = <&tlmm>;
 			interrupts = <65 0x2008>;
-			vdd-supply = <&pm8937_l10>;
-			vcc_i2c-supply = <&pm8937_l5>;
+			vdd-supply = <&pm8917_l10>;
+			vcc_i2c-supply = <&pm8917_l5>;
 			/* pins used by touchscreen */
 			pinctrl-names = "pmx_ts_active","pmx_ts_suspend",
 					"pmx_ts_release";
@@ -56,8 +56,8 @@
 			compatible = "goodix,gt9xx";
 			status = "okay";
 			reg = <0x5d>;
-			vdd_ana-supply = <&pm8937_l10>;
-			vcc_i2c-supply = <&pm8937_l5>;
+			vdd_ana-supply = <&pm8917_l10>;
+			vcc_i2c-supply = <&pm8917_l5>;
 			interrupt-parent = <&tlmm>;
 			interrupts = <13 0x2008>;
 			pinctrl-names = "gdix_ts_int_default", "gdix_ts_int_output_low",

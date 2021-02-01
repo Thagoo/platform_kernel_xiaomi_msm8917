@@ -63,8 +63,8 @@
 
 	hbtp {
 		compatible = "qcom,hbtp-input";
-		vcc_ana-supply = <&pm8937_l10>;
-		vcc_dig-supply = <&pm8937_l5>;
+		vcc_ana-supply = <&pm8917_l10>;
+		vcc_dig-supply = <&pm8917_l5>;
 		qcom,afe-load = <50000>;
 		qcom,afe-vtg-min = <2850000>;
 		qcom,afe-vtg-max = <2850000>;
@@ -121,8 +121,8 @@
 		reg = <0x22>;
 		interrupt-parent = <&tlmm>;
 		interrupts = <65 0x2008>;
-		vdd_ana-supply = <&pm8937_l10>;
-		vcc_i2c-supply = <&pm8937_l5>;
+		vdd_ana-supply = <&pm8917_l10>;
+		vcc_i2c-supply = <&pm8917_l5>;
 		synaptics,pwr-reg-name = "vdd_ana";
 		synaptics,bus-reg-name = "vcc_i2c";
 		pinctrl-names = "pmx_ts_active","pmx_ts_suspend";
