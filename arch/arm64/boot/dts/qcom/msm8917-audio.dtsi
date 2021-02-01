@@ -126,7 +126,7 @@
 					"analog-codec";
 		asoc-wsa-codec-names = "wsa881x-i2c-codec.2-000f";
 		asoc-wsa-codec-prefixes = "SpkrMono";
-		msm-vdd-wsa-switch-supply = <&pm8937_l5>;
+		msm-vdd-wsa-switch-supply = <&pm8917_l5>;
 		qcom,msm-vdd-wsa-switch-voltage = <1800000>;
 		qcom,msm-vdd-wsa-switch-current = <10000>;
 	};
@@ -331,27 +331,27 @@
 
 		qcom,cdc-reset-gpio = <&tlmm 68 0>;
 
-		cdc-vdd-buck-supply = <&eldo2_pm8937>;
+		cdc-vdd-buck-supply = <&eldo2_pm8917>;
 		qcom,cdc-vdd-buck-voltage = <1800000 1800000>;
 		qcom,cdc-vdd-buck-current = <650000>;
 
-		cdc-buck-sido-supply = <&eldo2_pm8937>;
+		cdc-buck-sido-supply = <&eldo2_pm8917>;
 		qcom,cdc-buck-sido-voltage = <1800000 1800000>;
 		qcom,cdc-buck-sido-current = <250000>;
 
-		cdc-vdd-tx-h-supply = <&pm8937_l5>;
+		cdc-vdd-tx-h-supply = <&pm8917_l5>;
 		qcom,cdc-vdd-tx-h-voltage = <1800000 1800000>;
 		qcom,cdc-vdd-tx-h-current = <25000>;
 
-		cdc-vdd-rx-h-supply = <&pm8937_l5>;
+		cdc-vdd-rx-h-supply = <&pm8917_l5>;
 		qcom,cdc-vdd-rx-h-voltage = <1800000 1800000>;
 		qcom,cdc-vdd-rx-h-current = <25000>;
 
-		cdc-vdd-px-supply = <&pm8937_l5>;
+		cdc-vdd-px-supply = <&pm8917_l5>;
 		qcom,cdc-vdd-px-voltage = <1800000 1800000>;
 		qcom,cdc-vdd-px-current = <10000>;
 
-		cdc-vdd-mic-bias-supply = <&pm8937_l13>;
+		cdc-vdd-mic-bias-supply = <&pm8917_l13>;
 		qcom,cdc-vdd-mic-bias-voltage = <3075000 3075000>;
 		qcom,cdc-vdd-mic-bias-current = <15000>;
 	};
@@ -406,19 +406,19 @@
 				"hphr_cnp_int",
 				"hphl_cnp_int";
 
-		cdc-vdda-cp-supply = <&pm8937_s4>;
+		cdc-vdda-cp-supply = <&pm8917_s4>;
 		qcom,cdc-vdda-cp-voltage = <2050000 2050000>;
 		qcom,cdc-vdda-cp-current = <210000>;
 
-		cdc-vdd-io-supply = <&pm8937_l5>;
+		cdc-vdd-io-supply = <&pm8917_l5>;
 		qcom,cdc-vdd-io-voltage = <1800000 1800000>;
 		qcom,cdc-vdd-io-current = <5000>;
 
-		cdc-vdd-pa-supply = <&pm8937_s4>;
+		cdc-vdd-pa-supply = <&pm8917_s4>;
 		qcom,cdc-vdd-pa-voltage = <1900000 2050000>;
 		qcom,cdc-vdd-pa-current = <260000>;
 
-		cdc-vdd-mic-bias-supply = <&pm8937_l13>;
+		cdc-vdd-mic-bias-supply = <&pm8917_l13>;
 		qcom,cdc-vdd-mic-bias-voltage = <3075000 3075000>;
 		qcom,cdc-vdd-mic-bias-current = <5000>;
 

@@ -20,7 +20,7 @@
 		reg = <0x0>;
 		compatible = "qcom,actuator";
 		qcom,cci-master = <0>;
-		cam_vaf-supply = <&pm8937_l17>;
+		cam_vaf-supply = <&pm8917_l17>;
 		qcom,cam-vreg-name = "cam_vaf";
 		qcom,cam-vreg-min-voltage = <2850000>;
 		qcom,cam-vreg-max-voltage = <2850000>;
@@ -32,10 +32,10 @@
 		compatible = "qcom,eeprom";
 		qcom,cci-master = <0>;
 		reg = <0x0>;
-		cam_vdig-supply = <&pm8937_l23>;
-		cam_vana-supply = <&pm8937_l22>;
-		cam_vio-supply = <&pm8937_l6>;
-		cam_vaf-supply = <&pm8937_l17>;
+		cam_vdig-supply = <&pm8917_l23>;
+		cam_vana-supply = <&pm8917_l22>;
+		cam_vio-supply = <&pm8917_l6>;
+		cam_vaf-supply = <&pm8917_l17>;
 		qcom,cam-vreg-name = "cam_vdig", "cam_vio", "cam_vana",
 							"cam_vaf";
 		qcom,cam-vreg-min-voltage = <1200000 0 2800000 2850000>;
@@ -66,10 +66,10 @@
 		cell-index = <2>;
 		compatible = "qcom,eeprom";
 		reg = <0x02>;
-		cam_vdig-supply = <&pm8937_l23>;
-		cam_vana-supply = <&pm8937_l22>;
-		cam_vio-supply = <&pm8937_l6>;
-		cam_vaf-supply = <&pm8937_l17>;
+		cam_vdig-supply = <&pm8917_l23>;
+		cam_vana-supply = <&pm8917_l22>;
+		cam_vio-supply = <&pm8917_l6>;
+		cam_vaf-supply = <&pm8917_l17>;
 		qcom,cam-vreg-name = "cam_vdig", "cam_vio", "cam_vana",
 					"cam_vaf";
 		qcom,cam-vreg-min-voltage = <1200000 0 2800000 2850000>;
@@ -109,10 +109,10 @@
 		qcom,actuator-src = <&actuator0>;
 		qcom,led-flash-src = <&led_flash0>;
 		qcom,eeprom-src = <&eeprom0>;
-		cam_vdig-supply = <&pm8937_l23>;
-		cam_vana-supply = <&pm8937_l22>;
-		cam_vio-supply = <&pm8937_l6>;
-		cam_vaf-supply = <&pm8937_l17>;
+		cam_vdig-supply = <&pm8917_l23>;
+		cam_vana-supply = <&pm8917_l22>;
+		cam_vio-supply = <&pm8917_l6>;
+		cam_vaf-supply = <&pm8917_l17>;
 		qcom,cam-vreg-name = "cam_vdig", "cam_vio", "cam_vana",
 							"cam_vaf";
 		qcom,cam-vreg-min-voltage = <1200000 0 2800000 2850000>;
@@ -150,9 +150,9 @@
 		qcom,csid-sd-index = <1>;
 		qcom,eeprom-src = <&eeprom2>;
 		qcom,mount-angle = <270>;
-		cam_vdig-supply = <&pm8937_l23>;
-		cam_vana-supply = <&pm8937_l22>;
-		cam_vio-supply = <&pm8937_l6>;
+		cam_vdig-supply = <&pm8917_l23>;
+		cam_vana-supply = <&pm8917_l22>;
+		cam_vio-supply = <&pm8917_l6>;
 		qcom,cam-vreg-name = "cam_vdig", "cam_vio", "cam_vana";
 		qcom,cam-vreg-min-voltage = <1200000 0 2800000>;
 		qcom,cam-vreg-max-voltage = <1200000 0 2800000>;

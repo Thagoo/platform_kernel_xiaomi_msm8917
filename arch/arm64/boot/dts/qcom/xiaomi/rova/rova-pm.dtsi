@@ -131,7 +131,7 @@
 	};
 };
 
-&pm8937_l6 {
+&pm8917_l6 {
 	regulator-always-on;
 };
 
