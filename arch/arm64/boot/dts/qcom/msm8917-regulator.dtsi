@@ -135,9 +135,9 @@
 		status = "okay";
 		pm8917_l5: regulator-l5 {
 			regulator-name = "pm8917_l5";
-			regulator-min-microvolt = <1800000>;
-			regulator-max-microvolt = <1800000>;
-			qcom,init-voltage = <1800000>;
+			regulator-min-microvolt = <1704000>;
+			regulator-max-microvolt = <1896000>;
+			qcom,init-voltage = <1704000>;
 			status = "okay";
 		};
 	};
