@@ -1,0 +1,24 @@
+kind: pipeline
+name: triton
+
+clone:
+        depth: 1
+
+steps:
+  - name: compile
+    image: thagoo/triton-proton:latest
+    environment:
+            API_ID:
+                    from_secret: API_ID
+            API_HASH:
+                    from_secret: API_HASH
+            CHANNEL_ID:
+                    from_secret: CHANNEL_ID
+            STRING_SESSION:
+                    from_secret: STRING_SESSION
+                    
+    commands:
+      - wget https://raw.githubusercontent.com/Thagoo/triton-scripts/ts/rova/11/build.py
+      - echo API_ID=$API_ID > env && echo API_HASH=$API_HASH >> env && echo CHANNEL_ID=$CHANNEL_ID >> env && echo STRING_SESSION=$STRING_SESSION >> env
+      - chmod +x build.py
+      - python3 build.py
