@@ -610,41 +610,43 @@ static void gtp_work_func(struct goodix_ts_data *ts)
 		return;
 	}
 
-	/* touch key event */
-	if (key_value & 0xf0 || pre_key & 0xf0) {
-		/* pen button */
-		switch (key_value) {
-		case 0x40:
-			input_report_key(ts->input_dev, GTP_PEN_BUTTON1, 1);
-			input_report_key(ts->input_dev, GTP_PEN_BUTTON2, 1);
-			break;
-		case 0x10:
-			input_report_key(ts->input_dev, GTP_PEN_BUTTON1, 1);
-			input_report_key(ts->input_dev, GTP_PEN_BUTTON2, 0);
-			dev_dbg(&ts->client->dev, "pen button1 down\n");
-			break;
-		case 0x20:
-			input_report_key(ts->input_dev, GTP_PEN_BUTTON1, 0);
-			input_report_key(ts->input_dev, GTP_PEN_BUTTON2, 1);
-			break;
-		default:
-			input_report_key(ts->input_dev, GTP_PEN_BUTTON1, 0);
-			input_report_key(ts->input_dev, GTP_PEN_BUTTON2, 0);
-			dev_dbg(&ts->client->dev, "button1 up\n");
-			break;
-		}
-		input_sync(ts->input_dev);
-		pre_key = key_value;
-	} else if (key_value & 0x0f || pre_key & 0x0f && !disable_keys_function) {
-		/* panel key */
-		for (i = 0; i < ts->pdata->key_nums; i++) {
-			if ((pre_key | key_value) & (0x01 << i))
+	if(!disable_keys_function) {
+		/* touch key event */
+			if (key_value & 0xf0 || pre_key & 0xf0) {
+			/* pen button */
+			switch (key_value) {
+			case 0x40:
+				input_report_key(ts->input_dev, GTP_PEN_BUTTON1, 1);
+				input_report_key(ts->input_dev, GTP_PEN_BUTTON2, 1);
+				break;
+			case 0x10:
+				input_report_key(ts->input_dev, GTP_PEN_BUTTON1, 1);
+				input_report_key(ts->input_dev, GTP_PEN_BUTTON2, 0);
+				dev_dbg(&ts->client->dev, "pen button1 down\n");
+				break;
+			case 0x20:
+				input_report_key(ts->input_dev, GTP_PEN_BUTTON1, 0);
+				input_report_key(ts->input_dev, GTP_PEN_BUTTON2, 1);
+				break;
+			default:
+				input_report_key(ts->input_dev, GTP_PEN_BUTTON1, 0);
+				input_report_key(ts->input_dev, GTP_PEN_BUTTON2, 0);
+				dev_dbg(&ts->client->dev, "button1 up\n");
+				break;
+			}
+			input_sync(ts->input_dev);
+			pre_key = key_value;
+		} else if (key_value & 0x0f || pre_key & 0x0f) {
+			/* panel key */
+			for (i = 0; i < ts->pdata->key_nums; i++) {
+				if ((pre_key | key_value) & (0x01 << i))
 				input_report_key(ts->input_dev,
-						 ts->pdata->key_map[i],
-						 key_value & (0x01 << i));
+							 ts->pdata->key_map[i],
+							 key_value & (0x01 << i));
+			}
+			input_sync(ts->input_dev);
+			pre_key = key_value;
 		}
-		input_sync(ts->input_dev);
-		pre_key = key_value;
 	}
 
 	if (!ts->pdata->type_a_report)
