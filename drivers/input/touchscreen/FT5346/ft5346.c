@@ -388,6 +388,27 @@ static irqreturn_t ft5x06_ts_interrupt(int irq, void *dev_id)
         if (!num_touches && !status && !id)
             break;
 
+        if (y == 2000) {
+
+                if (data->disable_keys)
+                    break;
+
+			y = 1344;
+			switch (x) {
+			case 180:
+				x = 150;
+				break;
+			case 540:
+				x = 360;
+				break;
+			case 900:
+				x = 580;
+				break;
+			default:
+				break;
+			}
+	}
+
 	input_mt_slot(ip_dev, id);
         	if (status == FT_TOUCH_DOWN || status == FT_TOUCH_CONTACT)
                	       {
